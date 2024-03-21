@@ -1,0 +1,39 @@
+import "src/hitrecord.car"
+import "src/vec3.car"
+
+struct Metal {
+    Color albedo
+    f32 fuzz
+
+    def proc new Color f32 : Self {
+        Self result
+
+        result.fuzz swap =
+        result.albedo swap =
+
+        result@
+    }
+
+    def proc emit Self* f32 f32 Vec3 : Color {
+        disc disc disc disc
+        0.0 0.0 0.0 Color.new
+    }
+
+    def proc scatter Self* HRay HitRecord* Color* HRay* : bool {
+        => scattered
+        => attenuation 
+        => record
+        => in
+        => self
+
+        in.dir Vec3.normal record.normal@ Vec3.reflect => reflected
+        Vec3.random_unit_vector self.fuzz@ Vec3.mul => fuzz
+
+        scattered.orig record.p@ =
+        scattered.dir reflected fuzz Vec3.add =
+        scattered.time in.time = 
+        attenuation self.albedo@ = 
+
+        scattered.dir@ record.normal@ Vec3.dot 0.0 >
+    }
+}

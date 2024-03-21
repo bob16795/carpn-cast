@@ -1,0 +1,2436 @@
+; ModuleID = 'Context'
+source_filename = "Context"
+
+%Vec3 = type { float, float, float }
+%Color = type { %Vec3 }
+%ArrayList.5 = type { i32, i32, ptr }
+%ArrayList.6 = type { i32, i32, ptr }
+%Group = type { %ArrayList, %AABB }
+%ArrayList = type { i32, i32, ptr }
+%AABB = type { %Interval, %Interval, %Interval }
+%Interval = type { float, float }
+%Hittable = type { %Vec3, %Vec3, %HittableVTable, ptr }
+%HittableVTable = type { ptr, ptr }
+%Ray = type { %HRay }
+%HRay = type { %Vec3, %Vec3, float }
+%SolidColor = type { %Color }
+%Lambertian = type { %Texture }
+%Texture = type { %TextureVTable, ptr }
+%TextureVTable = type { ptr }
+%DiffuseLight = type { %Texture }
+%Material = type { %MaterialVTable, ptr }
+%MaterialVTable = type { ptr, ptr }
+%Quad = type { %Vec3, %Vec3, %Vec3, %Vec3, ptr, %Vec3, float, %AABB }
+%RotateY = type { float, float, %Hittable, %AABB }
+%HitRecord = type { %Vec3, %Vec3, float, float, float, i1, ptr }
+%ArrayList.13 = type { i32, i32, ptr }
+
+@str = global [4 x i8] c"P3\0A\00"
+@str.2 = global [2 x i8] c" \00"
+@str.3 = global [6 x i8] c"\0A255\0A\00"
+@str.36 = global [4 x i8] c"lol\00"
+@str.41 = global [4 x i8] c"lol\00"
+@str.43 = global [4 x i8] c"lol\00"
+@str.47 = global [2 x i8] c" \00"
+@str.48 = global [2 x i8] c" \00"
+@str.49 = global [2 x i8] c"\0A\00"
+
+define i32 @main() {
+entry:
+  %calltmp = call float @pos_0(float 2.780000e+02)
+  %calltmp1 = call float @pos_0(float 2.780000e+02)
+  %calltmp2 = call float @neg_0(float 8.000000e+02)
+  %calltmp3 = call %Vec3 @new_0(float %calltmp, float %calltmp1, float %calltmp2)
+  %calltmp4 = call float @pos_0(float 2.780000e+02)
+  %calltmp5 = call float @pos_0(float 2.780000e+02)
+  %calltmp6 = call float @pos_0(float 0.000000e+00)
+  %calltmp7 = call %Vec3 @new_0(float %calltmp4, float %calltmp5, float %calltmp6)
+  %calltmp8 = call %Vec3 @new_0(float 0.000000e+00, float 1.000000e+00, float 0.000000e+00)
+  %calltmp9 = call %Color @new_0.1(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp10 = call float @degrees_to_radians_0(float 4.000000e+01)
+  %divtmp = fdiv float %calltmp10, 2.000000e+00
+  %calltmp11 = call float @tanf(float %divtmp)
+  %multmp = fmul float %calltmp11, 0x3FF69FBE80000000
+  %multmp12 = fmul float 2.000000e+00, %multmp
+  %multmp13 = fmul float %multmp12, 1.000000e+00
+  %calltmp14 = call %Vec3 @sub_0(%Vec3 %calltmp3, %Vec3 %calltmp7)
+  %calltmp15 = call %Vec3 @normal_0(%Vec3 %calltmp14)
+  %calltmp16 = call %Vec3 @cross_0(%Vec3 %calltmp8, %Vec3 %calltmp15)
+  %calltmp17 = call %Vec3 @normal_0(%Vec3 %calltmp16)
+  %calltmp18 = call %Vec3 @cross_0(%Vec3 %calltmp15, %Vec3 %calltmp17)
+  %calltmp19 = call %Vec3 @mul_0(%Vec3 %calltmp17, float %multmp13)
+  %subtmp = fsub float 0.000000e+00, %multmp12
+  %calltmp20 = call %Vec3 @mul_0(%Vec3 %calltmp18, float %subtmp)
+  %calltmp21 = call %Vec3 @div_0(%Vec3 %calltmp19, float 1.000000e+03)
+  %calltmp22 = call %Vec3 @div_0(%Vec3 %calltmp20, float 1.000000e+03)
+  %calltmp23 = call %Vec3 @mul_0(%Vec3 %calltmp15, float 0x3FF69FBE80000000)
+  %calltmp24 = call %Vec3 @sub_0(%Vec3 %calltmp3, %Vec3 %calltmp23)
+  %calltmp25 = call %Vec3 @div_0(%Vec3 %calltmp19, float 2.000000e+00)
+  %calltmp26 = call %Vec3 @sub_0(%Vec3 %calltmp24, %Vec3 %calltmp25)
+  %calltmp27 = call %Vec3 @div_0(%Vec3 %calltmp20, float 2.000000e+00)
+  %calltmp28 = call %Vec3 @sub_0(%Vec3 %calltmp26, %Vec3 %calltmp27)
+  %calltmp29 = call float @degrees_to_radians_0(float 0.000000e+00)
+  %calltmp30 = call float @tanf(float %calltmp29)
+  %multmp31 = fmul float 0x3FF69FBE80000000, %calltmp30
+  %calltmp32 = call %Vec3 @mul_0(%Vec3 %calltmp17, float %multmp31)
+  %calltmp33 = call %Vec3 @mul_0(%Vec3 %calltmp18, float %multmp31)
+  %calltmp34 = call float @degrees_to_radians_0(float 0.000000e+00)
+  %calltmp35 = call float @tanf(float %calltmp34)
+  %multmp36 = fmul float 0x3FF69FBE80000000, %calltmp35
+  %calltmp37 = call %Vec3 @mul_0(%Vec3 %calltmp17, float %multmp36)
+  %calltmp38 = call %Vec3 @mul_0(%Vec3 %calltmp18, float %multmp36)
+  %calltmp39 = call void @printstr(ptr @str)
+  %calltmp40 = call void @printint(i64 1000)
+  %calltmp41 = call void @printstr(ptr @str.2)
+  %calltmp42 = call void @printint(i64 1000)
+  %calltmp43 = call void @printstr(ptr @str.3)
+  %worldStuff = alloca %ArrayList.5, align 8
+  %calltmp44 = call %ArrayList.6 @init_0()
+  store %ArrayList.6 %calltmp44, ptr %worldStuff, align 8
+  %calltmp45 = call void @cornell_box_0(ptr %worldStuff)
+  %world = alloca %Group, align 8
+  %readtmp = load %ArrayList.5, ptr %worldStuff, align 8
+  %calltmp46 = call %Group @newL_0(%ArrayList.5 %readtmp)
+  store %Group %calltmp46, ptr %world, align 8
+  %worldh = alloca %Hittable, align 8
+  %calltmp47 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp48 = call %Hittable @new_1.34(ptr %world, %Vec3 %calltmp47)
+  store %Hittable %calltmp48, ptr %worldh, align 8
+  %i = alloca i64, align 8
+  %j = alloca i64, align 8
+  %s = alloca i64, align 8
+  %c = alloca %Color, align 8
+  %ray_origin = alloca %Vec3, align 8
+  store i64 0, ptr %j, align 4
+  br label %whilehead
+
+whilehead:                                        ; preds = %whilemerge52, %entry
+  %readtmp49 = load i64, ptr %j, align 4
+  %lttmp = icmp ult i64 %readtmp49, 1000
+  %docond = icmp ne i1 %lttmp, false
+  br i1 %docond, label %whilebody, label %whilemerge
+
+whilebody:                                        ; preds = %whilehead
+  store i64 0, ptr %i, align 4
+  br label %whilehead50
+
+whilemerge:                                       ; preds = %whilehead
+  ret i32 0
+
+whilehead50:                                      ; preds = %whilemerge59, %whilebody
+  %readtmp53 = load i64, ptr %i, align 4
+  %lttmp54 = icmp ult i64 %readtmp53, 1000
+  %docond55 = icmp ne i1 %lttmp54, false
+  br i1 %docond55, label %whilebody51, label %whilemerge52
+
+whilebody51:                                      ; preds = %whilehead50
+  %calltmp56 = call %Color @new_0.1(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  store %Color %calltmp56, ptr %c, align 4
+  store i64 0, ptr %s, align 4
+  br label %whilehead57
+
+whilemerge52:                                     ; preds = %whilehead50
+  %readtmp89 = load i64, ptr %j, align 4
+  %tmp_float90 = trunc i64 %readtmp89 to i32
+  %calltmp91 = call void @log_pc(i32 %tmp_float90, i32 1000)
+  %readtmp92 = load i64, ptr %j, align 4
+  %addtmp93 = add i64 %readtmp92, 1
+  store i64 %addtmp93, ptr %j, align 4
+  br label %whilehead
+
+whilehead57:                                      ; preds = %ifmerge, %whilebody51
+  %readtmp60 = load i64, ptr %s, align 4
+  %lttmp61 = icmp ult i64 %readtmp60, 1000
+  %docond62 = icmp ne i1 %lttmp61, false
+  br i1 %docond62, label %whilebody58, label %whilemerge59
+
+whilebody58:                                      ; preds = %whilehead57
+  %readtmp63 = load i64, ptr %i, align 4
+  %tmp_float = uitofp i64 %readtmp63 to float
+  %calltmp64 = call %Vec3 @mul_0(%Vec3 %calltmp21, float %tmp_float)
+  %readtmp65 = load i64, ptr %j, align 4
+  %tmp_float66 = uitofp i64 %readtmp65 to float
+  %calltmp67 = call %Vec3 @mul_0(%Vec3 %calltmp22, float %tmp_float66)
+  %calltmp68 = call %Vec3 @add_0(%Vec3 %calltmp64, %Vec3 %calltmp67)
+  %calltmp69 = call %Vec3 @add_0(%Vec3 %calltmp28, %Vec3 %calltmp68)
+  %calltmp70 = call %Vec3 @pixel_sample_square_0(%Vec3 %calltmp21, %Vec3 %calltmp22)
+  %calltmp71 = call %Vec3 @add_0(%Vec3 %calltmp69, %Vec3 %calltmp70)
+  store %Vec3 %calltmp3, ptr %ray_origin, align 4
+  br i1 true, label %ifbody, label %ifmerge
+
+whilemerge59:                                     ; preds = %whilehead57
+  %readtmp83 = load %Color, ptr %c, align 4
+  %readtmp84 = load i64, ptr %s, align 4
+  %tmp_float85 = uitofp i64 %readtmp84 to float
+  %calltmp86 = call void @write_0(%Color %readtmp83, float %tmp_float85)
+  %readtmp87 = load i64, ptr %i, align 4
+  %addtmp88 = add i64 %readtmp87, 1
+  store i64 %addtmp88, ptr %i, align 4
+  br label %whilehead50
+
+ifbody:                                           ; preds = %whilebody58
+  %calltmp72 = call %Vec3 @defocus_disk_sample_0(%Vec3 %calltmp3, %Vec3 %calltmp37, %Vec3 %calltmp38)
+  store %Vec3 %calltmp72, ptr %ray_origin, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %whilebody58
+  %calltmp73 = call double @random_double01()
+  %tmp_trunc = fptrunc double %calltmp73 to float
+  %readtmp74 = load %Vec3, ptr %ray_origin, align 4
+  %calltmp75 = call %Vec3 @sub_0(%Vec3 %calltmp71, %Vec3 %readtmp74)
+  %readtmp76 = load %Vec3, ptr %ray_origin, align 4
+  %calltmp77 = call %Ray @new_0.44(%Vec3 %readtmp76, %Vec3 %calltmp75, float %tmp_trunc)
+  %readtmp78 = load %Hittable, ptr %worldh, align 8
+  %calltmp79 = call %Color @color_0(%Ray %calltmp77, %Hittable %readtmp78, %Color %calltmp9, i32 50)
+  %0 = getelementptr inbounds %Color, ptr %c, i32 0, i32 0
+  %1 = getelementptr inbounds %Color, ptr %c, i32 0, i32 0
+  %readtmp80 = load %Vec3, ptr %1, align 4
+  %extracted = extractvalue %Color %calltmp79, 0
+  %calltmp81 = call %Vec3 @add_0(%Vec3 %readtmp80, %Vec3 %extracted)
+  store %Vec3 %calltmp81, ptr %0, align 4
+  %readtmp82 = load i64, ptr %s, align 4
+  %addtmp = add i64 %readtmp82, 1
+  store i64 %addtmp, ptr %s, align 4
+  br label %whilehead57
+}
+
+define float @pos_0(float %0) {
+entry:
+  ret float %0
+}
+
+define float @neg_0(float %0) {
+entry:
+  %subtmp = fsub float 0.000000e+00, %0
+  ret float %subtmp
+}
+
+define %Vec3 @new_0(float %0, float %1, float %2) {
+entry:
+  %result = alloca %Vec3, align 8
+  %3 = getelementptr inbounds %Vec3, ptr %result, i32 0, i32 2
+  store float %2, ptr %3, align 4
+  %4 = getelementptr inbounds %Vec3, ptr %result, i32 0, i32 1
+  store float %1, ptr %4, align 4
+  %5 = getelementptr inbounds %Vec3, ptr %result, i32 0, i32 0
+  store float %0, ptr %5, align 4
+  %readtmp = load %Vec3, ptr %result, align 4
+  ret %Vec3 %readtmp
+}
+
+define %Color @new_0.1(float %0, float %1, float %2) {
+entry:
+  %result = alloca %Color, align 8
+  %3 = getelementptr inbounds %Color, ptr %result, i32 0, i32 0
+  %4 = getelementptr inbounds %Vec3, ptr %3, i32 0, i32 2
+  store float %2, ptr %4, align 4
+  %5 = getelementptr inbounds %Color, ptr %result, i32 0, i32 0
+  %6 = getelementptr inbounds %Vec3, ptr %5, i32 0, i32 1
+  store float %1, ptr %6, align 4
+  %7 = getelementptr inbounds %Color, ptr %result, i32 0, i32 0
+  %8 = getelementptr inbounds %Vec3, ptr %7, i32 0, i32 0
+  store float %0, ptr %8, align 4
+  %readtmp = load %Color, ptr %result, align 4
+  ret %Color %readtmp
+}
+
+define float @degrees_to_radians_0(float %0) {
+entry:
+  %multmp = fmul float %0, 0x3F91DE69A0000000
+  ret float %multmp
+}
+
+declare float @tanf(float)
+
+define %Vec3 @sub_0(%Vec3 %0, %Vec3 %1) {
+entry:
+  %extracted = extractvalue %Vec3 %0, 0
+  %extracted1 = extractvalue %Vec3 %1, 0
+  %subtmp = fsub float %extracted, %extracted1
+  %extracted2 = extractvalue %Vec3 %0, 1
+  %extracted3 = extractvalue %Vec3 %1, 1
+  %subtmp4 = fsub float %extracted2, %extracted3
+  %extracted5 = extractvalue %Vec3 %0, 2
+  %extracted6 = extractvalue %Vec3 %1, 2
+  %subtmp7 = fsub float %extracted5, %extracted6
+  %calltmp = call %Vec3 @new_0(float %subtmp, float %subtmp4, float %subtmp7)
+  ret %Vec3 %calltmp
+}
+
+define %Vec3 @normal_0(%Vec3 %0) {
+entry:
+  %calltmp = call float @mag_0(%Vec3 %0)
+  %calltmp1 = call %Vec3 @div_0(%Vec3 %0, float %calltmp)
+  ret %Vec3 %calltmp1
+}
+
+define float @mag_0(%Vec3 %0) {
+entry:
+  %calltmp = call float @dot_0(%Vec3 %0, %Vec3 %0)
+  %calltmp1 = call float @sqrtf(float %calltmp)
+  ret float %calltmp1
+}
+
+define float @dot_0(%Vec3 %0, %Vec3 %1) {
+entry:
+  %extracted = extractvalue %Vec3 %0, 0
+  %extracted1 = extractvalue %Vec3 %1, 0
+  %multmp = fmul float %extracted, %extracted1
+  %extracted2 = extractvalue %Vec3 %0, 1
+  %extracted3 = extractvalue %Vec3 %1, 1
+  %multmp4 = fmul float %extracted2, %extracted3
+  %addtmp = fadd float %multmp, %multmp4
+  %extracted5 = extractvalue %Vec3 %0, 2
+  %extracted6 = extractvalue %Vec3 %1, 2
+  %multmp7 = fmul float %extracted5, %extracted6
+  %addtmp8 = fadd float %addtmp, %multmp7
+  ret float %addtmp8
+}
+
+declare float @sqrtf(float)
+
+define %Vec3 @div_0(%Vec3 %0, float %1) {
+entry:
+  %extracted = extractvalue %Vec3 %0, 0
+  %divtmp = fdiv float %extracted, %1
+  %extracted1 = extractvalue %Vec3 %0, 1
+  %divtmp2 = fdiv float %extracted1, %1
+  %extracted3 = extractvalue %Vec3 %0, 2
+  %divtmp4 = fdiv float %extracted3, %1
+  %calltmp = call %Vec3 @new_0(float %divtmp, float %divtmp2, float %divtmp4)
+  ret %Vec3 %calltmp
+}
+
+define %Vec3 @cross_0(%Vec3 %0, %Vec3 %1) {
+entry:
+  %extracted = extractvalue %Vec3 %1, 1
+  %extracted1 = extractvalue %Vec3 %0, 2
+  %multmp = fmul float %extracted, %extracted1
+  %extracted2 = extractvalue %Vec3 %1, 2
+  %extracted3 = extractvalue %Vec3 %0, 1
+  %multmp4 = fmul float %extracted2, %extracted3
+  %subtmp = fsub float %multmp, %multmp4
+  %extracted5 = extractvalue %Vec3 %1, 2
+  %extracted6 = extractvalue %Vec3 %0, 0
+  %multmp7 = fmul float %extracted5, %extracted6
+  %extracted8 = extractvalue %Vec3 %1, 0
+  %extracted9 = extractvalue %Vec3 %0, 2
+  %multmp10 = fmul float %extracted8, %extracted9
+  %subtmp11 = fsub float %multmp7, %multmp10
+  %extracted12 = extractvalue %Vec3 %1, 0
+  %extracted13 = extractvalue %Vec3 %0, 1
+  %multmp14 = fmul float %extracted12, %extracted13
+  %extracted15 = extractvalue %Vec3 %1, 1
+  %extracted16 = extractvalue %Vec3 %0, 0
+  %multmp17 = fmul float %extracted15, %extracted16
+  %subtmp18 = fsub float %multmp14, %multmp17
+  %calltmp = call %Vec3 @new_0(float %subtmp, float %subtmp11, float %subtmp18)
+  ret %Vec3 %calltmp
+}
+
+define %Vec3 @mul_0(%Vec3 %0, float %1) {
+entry:
+  %extracted = extractvalue %Vec3 %0, 0
+  %multmp = fmul float %extracted, %1
+  %extracted1 = extractvalue %Vec3 %0, 1
+  %multmp2 = fmul float %extracted1, %1
+  %extracted3 = extractvalue %Vec3 %0, 2
+  %multmp4 = fmul float %extracted3, %1
+  %calltmp = call %Vec3 @new_0(float %multmp, float %multmp2, float %multmp4)
+  ret %Vec3 %calltmp
+}
+
+declare void @printstr(ptr)
+
+declare void @printint(i64)
+
+define %ArrayList.6 @init_0() {
+entry:
+  %result = alloca %ArrayList.6, align 8
+  %0 = getelementptr inbounds %ArrayList.6, ptr %result, i32 0, i32 1
+  store i32 0, ptr %0, align 4
+  %1 = getelementptr inbounds %ArrayList.6, ptr %result, i32 0, i32 0
+  store i32 0, ptr %1, align 4
+  %2 = getelementptr inbounds %ArrayList.6, ptr %result, i32 0, i32 2
+  store ptr null, ptr %2, align 8
+  %readtmp = load %ArrayList.6, ptr %result, align 8
+  ret %ArrayList.6 %readtmp
+}
+
+define void @cornell_box_0(ptr %0) {
+entry:
+  %calltmp = call ptr @malloc(i32 ptrtoint (ptr getelementptr inbounds ([1 x [4 x %SolidColor]], ptr null, i32 1) to i32))
+  %elemtemp = getelementptr inbounds [4 x %SolidColor], ptr %calltmp, i32 0, i32 0
+  %calltmp1 = call %Color @new_0.1(float 0x3FE4CCCCC0000000, float 0x3FA99999A0000000, float 0x3FA99999A0000000)
+  %calltmp2 = call %SolidColor @new_0.4(%Color %calltmp1)
+  store %SolidColor %calltmp2, ptr %elemtemp, align 4
+  %elemtemp3 = getelementptr inbounds [4 x %SolidColor], ptr %calltmp, i32 0, i32 1
+  %calltmp4 = call %Color @new_0.1(float 0x3FE75C2900000000, float 0x3FE75C2900000000, float 0x3FE75C2900000000)
+  %calltmp5 = call %SolidColor @new_0.4(%Color %calltmp4)
+  store %SolidColor %calltmp5, ptr %elemtemp3, align 4
+  %elemtemp6 = getelementptr inbounds [4 x %SolidColor], ptr %calltmp, i32 0, i32 2
+  %calltmp7 = call %Color @new_0.1(float 0x3FBEB851E0000000, float 0x3FDCCCCCC0000000, float 0x3FC3333340000000)
+  %calltmp8 = call %SolidColor @new_0.4(%Color %calltmp7)
+  store %SolidColor %calltmp8, ptr %elemtemp6, align 4
+  %elemtemp9 = getelementptr inbounds [4 x %SolidColor], ptr %calltmp, i32 0, i32 3
+  %calltmp10 = call %Color @new_0.1(float 1.500000e+01, float 1.500000e+01, float 1.500000e+01)
+  %calltmp11 = call %SolidColor @new_0.4(%Color %calltmp10)
+  store %SolidColor %calltmp11, ptr %elemtemp9, align 4
+  %calltmp12 = call ptr @malloc(i32 ptrtoint (ptr getelementptr inbounds ([1 x %Lambertian], ptr null, i32 1) to i32))
+  %calltmp13 = call ptr @malloc(i32 ptrtoint (ptr getelementptr inbounds ([1 x %Lambertian], ptr null, i32 1) to i32))
+  %calltmp14 = call ptr @malloc(i32 ptrtoint (ptr getelementptr inbounds ([1 x %Lambertian], ptr null, i32 1) to i32))
+  %calltmp15 = call ptr @malloc(i32 ptrtoint (ptr getelementptr inbounds ([1 x %DiffuseLight], ptr null, i32 1) to i32))
+  %elemtemp16 = getelementptr inbounds [4 x %SolidColor], ptr %calltmp, i32 0, i32 0
+  %calltmp17 = call %Texture @new_0.5(ptr %elemtemp16)
+  %calltmp18 = call %Lambertian @new_0.6(%Texture %calltmp17)
+  store %Lambertian %calltmp18, ptr %calltmp12, align 8
+  %elemtemp19 = getelementptr inbounds [4 x %SolidColor], ptr %calltmp, i32 0, i32 1
+  %calltmp20 = call %Texture @new_0.5(ptr %elemtemp19)
+  %calltmp21 = call %Lambertian @new_0.6(%Texture %calltmp20)
+  store %Lambertian %calltmp21, ptr %calltmp13, align 8
+  %elemtemp22 = getelementptr inbounds [4 x %SolidColor], ptr %calltmp, i32 0, i32 2
+  %calltmp23 = call %Texture @new_0.5(ptr %elemtemp22)
+  %calltmp24 = call %Lambertian @new_0.6(%Texture %calltmp23)
+  store %Lambertian %calltmp24, ptr %calltmp14, align 8
+  %elemtemp25 = getelementptr inbounds [4 x %SolidColor], ptr %calltmp, i32 0, i32 3
+  %calltmp26 = call %Texture @new_0.5(ptr %elemtemp25)
+  %calltmp27 = call %DiffuseLight @new_0.7(%Texture %calltmp26)
+  store %DiffuseLight %calltmp27, ptr %calltmp15, align 8
+  %calltmp28 = call ptr @malloc(i32 ptrtoint (ptr getelementptr inbounds ([1 x [4 x %Material]], ptr null, i32 1) to i32))
+  %elemtemp29 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 0
+  %calltmp30 = call %Material @new_0.8(ptr %calltmp14)
+  store %Material %calltmp30, ptr %elemtemp29, align 8
+  %elemtemp31 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 1
+  %calltmp32 = call %Material @new_0.8(ptr %calltmp12)
+  store %Material %calltmp32, ptr %elemtemp31, align 8
+  %elemtemp33 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 2
+  %calltmp34 = call %Material @new_0.8(ptr %calltmp13)
+  store %Material %calltmp34, ptr %elemtemp33, align 8
+  %elemtemp35 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 3
+  %calltmp36 = call %Material @new_1(ptr %calltmp15)
+  store %Material %calltmp36, ptr %elemtemp35, align 8
+  %calltmp37 = call ptr @malloc(i32 ptrtoint (ptr getelementptr inbounds ([1 x [6 x %Quad]], ptr null, i32 1) to i32))
+  %elemtemp38 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 0
+  %calltmp39 = call %Vec3 @new_0(float 5.550000e+02, float 0.000000e+00, float 0.000000e+00)
+  %calltmp40 = call %Vec3 @new_0(float 0.000000e+00, float 5.550000e+02, float 0.000000e+00)
+  %calltmp41 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 5.550000e+02)
+  %elemtemp42 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 0
+  %calltmp43 = call %Quad @new_0.12(%Vec3 %calltmp39, %Vec3 %calltmp40, %Vec3 %calltmp41, ptr %elemtemp42)
+  store %Quad %calltmp43, ptr %elemtemp38, align 8
+  %elemtemp44 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 1
+  %calltmp45 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp46 = call %Vec3 @new_0(float 0.000000e+00, float 5.550000e+02, float 0.000000e+00)
+  %calltmp47 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 5.550000e+02)
+  %elemtemp48 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 1
+  %calltmp49 = call %Quad @new_0.12(%Vec3 %calltmp45, %Vec3 %calltmp46, %Vec3 %calltmp47, ptr %elemtemp48)
+  store %Quad %calltmp49, ptr %elemtemp44, align 8
+  %elemtemp50 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 2
+  %calltmp51 = call %Vec3 @new_0(float 3.430000e+02, float 5.540000e+02, float 3.320000e+02)
+  %calltmp52 = call %Vec3 @new_0(float -1.300000e+02, float 0.000000e+00, float 0.000000e+00)
+  %calltmp53 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float -1.050000e+02)
+  %elemtemp54 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 3
+  %calltmp55 = call %Quad @new_0.12(%Vec3 %calltmp51, %Vec3 %calltmp52, %Vec3 %calltmp53, ptr %elemtemp54)
+  store %Quad %calltmp55, ptr %elemtemp50, align 8
+  %elemtemp56 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 3
+  %calltmp57 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp58 = call %Vec3 @new_0(float 5.550000e+02, float 0.000000e+00, float 0.000000e+00)
+  %calltmp59 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 5.550000e+02)
+  %elemtemp60 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 2
+  %calltmp61 = call %Quad @new_0.12(%Vec3 %calltmp57, %Vec3 %calltmp58, %Vec3 %calltmp59, ptr %elemtemp60)
+  store %Quad %calltmp61, ptr %elemtemp56, align 8
+  %elemtemp62 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 4
+  %calltmp63 = call %Vec3 @new_0(float 5.550000e+02, float 5.550000e+02, float 5.550000e+02)
+  %calltmp64 = call %Vec3 @new_0(float -5.550000e+02, float 0.000000e+00, float 0.000000e+00)
+  %calltmp65 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float -5.550000e+02)
+  %elemtemp66 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 2
+  %calltmp67 = call %Quad @new_0.12(%Vec3 %calltmp63, %Vec3 %calltmp64, %Vec3 %calltmp65, ptr %elemtemp66)
+  store %Quad %calltmp67, ptr %elemtemp62, align 8
+  %elemtemp68 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 5
+  %calltmp69 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 5.550000e+02)
+  %calltmp70 = call %Vec3 @new_0(float 5.550000e+02, float 0.000000e+00, float 0.000000e+00)
+  %calltmp71 = call %Vec3 @new_0(float 0.000000e+00, float 5.550000e+02, float 0.000000e+00)
+  %elemtemp72 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 2
+  %calltmp73 = call %Quad @new_0.12(%Vec3 %calltmp69, %Vec3 %calltmp70, %Vec3 %calltmp71, ptr %elemtemp72)
+  store %Quad %calltmp73, ptr %elemtemp68, align 8
+  %elemtemp74 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 0
+  %calltmp75 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp76 = call %Hittable @new_0.14(ptr %elemtemp74, %Vec3 %calltmp75)
+  %calltmp77 = call void @append_0(ptr %0, %Hittable %calltmp76)
+  %elemtemp78 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 1
+  %calltmp79 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp80 = call %Hittable @new_0.14(ptr %elemtemp78, %Vec3 %calltmp79)
+  %calltmp81 = call void @append_0.15(ptr %0, %Hittable %calltmp80)
+  %elemtemp82 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 2
+  %calltmp83 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp84 = call %Hittable @new_0.14(ptr %elemtemp82, %Vec3 %calltmp83)
+  %calltmp85 = call void @append_0.17(ptr %0, %Hittable %calltmp84)
+  %elemtemp86 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 3
+  %calltmp87 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp88 = call %Hittable @new_0.14(ptr %elemtemp86, %Vec3 %calltmp87)
+  %calltmp89 = call void @append_0.19(ptr %0, %Hittable %calltmp88)
+  %elemtemp90 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 4
+  %calltmp91 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp92 = call %Hittable @new_0.14(ptr %elemtemp90, %Vec3 %calltmp91)
+  %calltmp93 = call void @append_0.21(ptr %0, %Hittable %calltmp92)
+  %elemtemp94 = getelementptr inbounds [6 x %Quad], ptr %calltmp37, i32 0, i32 5
+  %calltmp95 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp96 = call %Hittable @new_0.14(ptr %elemtemp94, %Vec3 %calltmp95)
+  %calltmp97 = call void @append_0.23(ptr %0, %Hittable %calltmp96)
+  %calltmp98 = call ptr @malloc(i32 ptrtoint (ptr getelementptr inbounds ([1 x [2 x %RotateY]], ptr null, i32 1) to i32))
+  %elemtemp99 = getelementptr inbounds [2 x %RotateY], ptr %calltmp98, i32 0, i32 0
+  %calltmp100 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp101 = call %Vec3 @new_0(float 1.650000e+02, float 3.300000e+02, float 1.650000e+02)
+  %elemtemp102 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 2
+  %calltmp103 = call %Hittable @create_box_0(%Vec3 %calltmp100, %Vec3 %calltmp101, ptr %elemtemp102)
+  %calltmp104 = call %RotateY @new_0.39(%Hittable %calltmp103, float 0x3FD0C152A0000000)
+  store %RotateY %calltmp104, ptr %elemtemp99, align 8
+  %elemtemp105 = getelementptr inbounds [2 x %RotateY], ptr %calltmp98, i32 0, i32 1
+  %calltmp106 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp107 = call %Vec3 @new_0(float 1.650000e+02, float 1.650000e+02, float 1.650000e+02)
+  %elemtemp108 = getelementptr inbounds [4 x %Material], ptr %calltmp28, i32 0, i32 2
+  %calltmp109 = call %Hittable @create_box_0(%Vec3 %calltmp106, %Vec3 %calltmp107, ptr %elemtemp108)
+  %calltmp110 = call %RotateY @new_0.39(%Hittable %calltmp109, float 0xBFD41B3000000000)
+  store %RotateY %calltmp110, ptr %elemtemp105, align 8
+  ret void
+}
+
+declare ptr @malloc(i32)
+
+define %SolidColor @new_0.4(%Color %0) {
+entry:
+  %result = alloca %SolidColor, align 8
+  %1 = getelementptr inbounds %SolidColor, ptr %result, i32 0, i32 0
+  store %Color %0, ptr %1, align 4
+  %readtmp = load %SolidColor, ptr %result, align 4
+  ret %SolidColor %readtmp
+}
+
+define %Texture @new_0.5(ptr %0) {
+entry:
+  %result = alloca %Texture, align 8
+  %readtmp = load %SolidColor, ptr %0, align 4
+  %1 = getelementptr inbounds %Texture, ptr %result, i32 0, i32 0
+  %2 = getelementptr inbounds %TextureVTable, ptr %1, i32 0, i32 0
+  store ptr @value_0, ptr %2, align 8
+  %3 = getelementptr inbounds %Texture, ptr %result, i32 0, i32 1
+  store ptr %0, ptr %3, align 8
+  %readtmp1 = load %Texture, ptr %result, align 8
+  ret %Texture %readtmp1
+}
+
+define %Color @value_0(ptr %0, float %1, float %2, ptr %3) {
+entry:
+  %4 = getelementptr inbounds %SolidColor, ptr %0, i32 0, i32 0
+  %readtmp = load %Color, ptr %4, align 4
+  ret %Color %readtmp
+}
+
+define %Lambertian @new_0.6(%Texture %0) {
+entry:
+  %result = alloca %Lambertian, align 8
+  %1 = getelementptr inbounds %Lambertian, ptr %result, i32 0, i32 0
+  store %Texture %0, ptr %1, align 8
+  %readtmp = load %Lambertian, ptr %result, align 8
+  ret %Lambertian %readtmp
+}
+
+define %DiffuseLight @new_0.7(%Texture %0) {
+entry:
+  %result = alloca %DiffuseLight, align 8
+  %1 = getelementptr inbounds %DiffuseLight, ptr %result, i32 0, i32 0
+  store %Texture %0, ptr %1, align 8
+  %readtmp = load %DiffuseLight, ptr %result, align 8
+  ret %DiffuseLight %readtmp
+}
+
+define %Material @new_0.8(ptr %0) {
+entry:
+  %result = alloca %Material, align 8
+  %readtmp = load %Lambertian, ptr %0, align 8
+  %1 = getelementptr inbounds %Material, ptr %result, i32 0, i32 0
+  %2 = getelementptr inbounds %MaterialVTable, ptr %1, i32 0, i32 0
+  store ptr @scatter_0, ptr %2, align 8
+  %3 = getelementptr inbounds %Material, ptr %result, i32 0, i32 0
+  %4 = getelementptr inbounds %MaterialVTable, ptr %3, i32 0, i32 1
+  store ptr @emit_0, ptr %4, align 8
+  %5 = getelementptr inbounds %Material, ptr %result, i32 0, i32 1
+  store ptr %0, ptr %5, align 8
+  %readtmp1 = load %Material, ptr %result, align 8
+  ret %Material %readtmp1
+}
+
+define i1 @scatter_0(ptr %0, %HRay %1, ptr %2, ptr %3, ptr %4) {
+entry:
+  %scatter_direction = alloca %Vec3, align 8
+  %5 = getelementptr inbounds %HitRecord, ptr %2, i32 0, i32 1
+  %readtmp = load %Vec3, ptr %5, align 4
+  %calltmp = call %Vec3 @random_unit_vector_0()
+  %calltmp1 = call %Vec3 @add_0(%Vec3 %readtmp, %Vec3 %calltmp)
+  store %Vec3 %calltmp1, ptr %scatter_direction, align 4
+  %readtmp2 = load %Vec3, ptr %scatter_direction, align 4
+  %calltmp3 = call i1 @near_zero_0(%Vec3 %readtmp2)
+  %ifcond = icmp ne i1 %calltmp3, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %6 = getelementptr inbounds %HitRecord, ptr %2, i32 0, i32 1
+  %readtmp4 = load %Vec3, ptr %6, align 4
+  store %Vec3 %readtmp4, ptr %scatter_direction, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %7 = getelementptr inbounds %HRay, ptr %4, i32 0, i32 0
+  %8 = getelementptr inbounds %HitRecord, ptr %2, i32 0, i32 0
+  %readtmp5 = load %Vec3, ptr %8, align 4
+  store %Vec3 %readtmp5, ptr %7, align 4
+  %9 = getelementptr inbounds %HRay, ptr %4, i32 0, i32 1
+  %readtmp6 = load %Vec3, ptr %scatter_direction, align 4
+  store %Vec3 %readtmp6, ptr %9, align 4
+  %10 = getelementptr inbounds %HRay, ptr %4, i32 0, i32 2
+  %extracted = extractvalue %HRay %1, 2
+  store float %extracted, ptr %10, align 4
+  %11 = getelementptr inbounds %Lambertian, ptr %0, i32 0, i32 0
+  %readtmp7 = load %Texture, ptr %11, align 8
+  %12 = getelementptr inbounds %HitRecord, ptr %2, i32 0, i32 3
+  %readtmp8 = load float, ptr %12, align 4
+  %13 = getelementptr inbounds %HitRecord, ptr %2, i32 0, i32 4
+  %readtmp9 = load float, ptr %13, align 4
+  %14 = getelementptr inbounds %HitRecord, ptr %2, i32 0, i32 0
+  %calltmp10 = call %Color @value_0.9(%Texture %readtmp7, float %readtmp8, float %readtmp9, ptr %14)
+  store %Color %calltmp10, ptr %3, align 4
+  ret i1 true
+}
+
+define %Vec3 @random_unit_vector_0() {
+entry:
+  %calltmp = call %Vec3 @random_in_unit_sphere_0()
+  %calltmp1 = call %Vec3 @normal_0(%Vec3 %calltmp)
+  ret %Vec3 %calltmp1
+}
+
+define %Vec3 @random_in_unit_sphere_0() {
+entry:
+  %result = alloca %Vec3, align 8
+  br label %dobody
+
+dobody:                                           ; preds = %dobody, %entry
+  %calltmp = call %Vec3 @random_0(float -1.000000e+00, float 1.000000e+00)
+  store %Vec3 %calltmp, ptr %result, align 4
+  %readtmp = load %Vec3, ptr %result, align 4
+  %readtmp1 = load %Vec3, ptr %result, align 4
+  %calltmp2 = call float @dot_0(%Vec3 %readtmp, %Vec3 %readtmp1)
+  %lttmp = fcmp ule float %calltmp2, 1.000000e+00
+  %docond = icmp ne i1 %lttmp, false
+  br i1 %docond, label %dobody, label %domerge
+
+domerge:                                          ; preds = %dobody
+  %readtmp3 = load %Vec3, ptr %result, align 4
+  ret %Vec3 %readtmp3
+}
+
+define %Vec3 @random_0(float %0, float %1) {
+entry:
+  %tmp_ext = fpext float %1 to double
+  %tmp_ext1 = fpext float %0 to double
+  %calltmp = call double @random_double(double %tmp_ext1, double %tmp_ext)
+  %tmp_trunc = fptrunc double %calltmp to float
+  %calltmp2 = call double @random_double(double %tmp_ext1, double %tmp_ext)
+  %tmp_trunc3 = fptrunc double %calltmp2 to float
+  %calltmp4 = call double @random_double(double %tmp_ext1, double %tmp_ext)
+  %tmp_trunc5 = fptrunc double %calltmp4 to float
+  %calltmp6 = call %Vec3 @new_0(float %tmp_trunc, float %tmp_trunc3, float %tmp_trunc5)
+  ret %Vec3 %calltmp6
+}
+
+declare double @random_double(double, double)
+
+define %Vec3 @add_0(%Vec3 %0, %Vec3 %1) {
+entry:
+  %extracted = extractvalue %Vec3 %0, 0
+  %extracted1 = extractvalue %Vec3 %1, 0
+  %addtmp = fadd float %extracted, %extracted1
+  %extracted2 = extractvalue %Vec3 %0, 1
+  %extracted3 = extractvalue %Vec3 %1, 1
+  %addtmp4 = fadd float %extracted2, %extracted3
+  %extracted5 = extractvalue %Vec3 %0, 2
+  %extracted6 = extractvalue %Vec3 %1, 2
+  %addtmp7 = fadd float %extracted5, %extracted6
+  %calltmp = call %Vec3 @new_0(float %addtmp, float %addtmp4, float %addtmp7)
+  ret %Vec3 %calltmp
+}
+
+define i1 @near_zero_0(%Vec3 %0) {
+entry:
+  %extracted = extractvalue %Vec3 %0, 0
+  %calltmp = call float @fabsf(float %extracted)
+  %lttmp = fcmp ule float %calltmp, 0x3EE4F8B580000000
+  %extracted1 = extractvalue %Vec3 %0, 1
+  %calltmp2 = call float @fabsf(float %extracted1)
+  %lttmp3 = fcmp ule float %calltmp2, 0x3EE4F8B580000000
+  %subtmp = and i1 %lttmp, %lttmp3
+  %extracted4 = extractvalue %Vec3 %0, 2
+  %calltmp5 = call float @fabsf(float %extracted4)
+  %lttmp6 = fcmp ule float %calltmp5, 0x3EE4F8B580000000
+  %subtmp7 = and i1 %subtmp, %lttmp6
+  ret i1 %subtmp7
+}
+
+declare float @fabsf(float)
+
+define %Color @value_0.9(%Texture %0, float %1, float %2, ptr %3) {
+entry:
+  %extracted = extractvalue %Texture %0, 1
+  %extracted1 = extractvalue %Texture %0, 0
+  %extracted2 = extractvalue %TextureVTable %extracted1, 0
+  %calltmp = call %Color %extracted2(ptr %extracted, float %1, float %2, ptr %3)
+  ret %Color %calltmp
+}
+
+define %Color @emit_0(ptr %0, float %1, float %2, %Vec3 %3) {
+entry:
+  %calltmp = call %Color @new_0.1(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  ret %Color %calltmp
+}
+
+define %Material @new_1(ptr %0) {
+entry:
+  %result = alloca %Material, align 8
+  %readtmp = load %DiffuseLight, ptr %0, align 8
+  %1 = getelementptr inbounds %Material, ptr %result, i32 0, i32 0
+  %2 = getelementptr inbounds %MaterialVTable, ptr %1, i32 0, i32 0
+  store ptr @scatter_0.10, ptr %2, align 8
+  %3 = getelementptr inbounds %Material, ptr %result, i32 0, i32 0
+  %4 = getelementptr inbounds %MaterialVTable, ptr %3, i32 0, i32 1
+  store ptr @emit_0.11, ptr %4, align 8
+  %5 = getelementptr inbounds %Material, ptr %result, i32 0, i32 1
+  store ptr %0, ptr %5, align 8
+  %readtmp1 = load %Material, ptr %result, align 8
+  ret %Material %readtmp1
+}
+
+define i1 @scatter_0.10(ptr %0, %HRay %1, ptr %2, ptr %3, ptr %4) {
+entry:
+  ret i1 false
+}
+
+define %Color @emit_0.11(ptr %0, float %1, float %2, %Vec3 %3) {
+entry:
+  %p = alloca %Vec3, align 8
+  store %Vec3 %3, ptr %p, align 4
+  %4 = getelementptr inbounds %DiffuseLight, ptr %0, i32 0, i32 0
+  %readtmp = load %Texture, ptr %4, align 8
+  %calltmp = call %Color @value_0.9(%Texture %readtmp, float %1, float %2, ptr %p)
+  ret %Color %calltmp
+}
+
+define %Quad @new_0.12(%Vec3 %0, %Vec3 %1, %Vec3 %2, ptr %3) {
+entry:
+  %result = alloca %Quad, align 8
+  %4 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 4
+  store ptr %3, ptr %4, align 8
+  %5 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 2
+  store %Vec3 %2, ptr %5, align 4
+  %6 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 1
+  store %Vec3 %1, ptr %6, align 4
+  %7 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 0
+  store %Vec3 %0, ptr %7, align 4
+  %8 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 1
+  %readtmp = load %Vec3, ptr %8, align 4
+  %9 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 2
+  %readtmp1 = load %Vec3, ptr %9, align 4
+  %calltmp = call %Vec3 @cross_0(%Vec3 %readtmp, %Vec3 %readtmp1)
+  %10 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 5
+  %calltmp2 = call %Vec3 @normal_0(%Vec3 %calltmp)
+  store %Vec3 %calltmp2, ptr %10, align 4
+  %11 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 6
+  %12 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 5
+  %readtmp3 = load %Vec3, ptr %12, align 4
+  %13 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 0
+  %readtmp4 = load %Vec3, ptr %13, align 4
+  %calltmp5 = call float @dot_0(%Vec3 %readtmp3, %Vec3 %readtmp4)
+  store float %calltmp5, ptr %11, align 4
+  %14 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 3
+  %calltmp6 = call float @dot_0(%Vec3 %calltmp, %Vec3 %calltmp)
+  %calltmp7 = call %Vec3 @div_0(%Vec3 %calltmp, float %calltmp6)
+  store %Vec3 %calltmp7, ptr %14, align 4
+  %15 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 7
+  %16 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 0
+  %readtmp8 = load %Vec3, ptr %16, align 4
+  %17 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 0
+  %readtmp9 = load %Vec3, ptr %17, align 4
+  %18 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 1
+  %readtmp10 = load %Vec3, ptr %18, align 4
+  %calltmp11 = call %Vec3 @add_0(%Vec3 %readtmp9, %Vec3 %readtmp10)
+  %19 = getelementptr inbounds %Quad, ptr %result, i32 0, i32 2
+  %readtmp12 = load %Vec3, ptr %19, align 4
+  %calltmp13 = call %Vec3 @add_0(%Vec3 %calltmp11, %Vec3 %readtmp12)
+  %calltmp14 = call %AABB @newV_0(%Vec3 %readtmp8, %Vec3 %calltmp13)
+  %calltmp15 = call %AABB @pad_0(%AABB %calltmp14)
+  store %AABB %calltmp15, ptr %15, align 4
+  %readtmp16 = load %Quad, ptr %result, align 8
+  ret %Quad %readtmp16
+}
+
+define %AABB @newV_0(%Vec3 %0, %Vec3 %1) {
+entry:
+  %result = alloca %AABB, align 8
+  %2 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 0
+  %extracted = extractvalue %Vec3 %0, 0
+  %extracted1 = extractvalue %Vec3 %1, 0
+  %calltmp = call %Interval @new_0.13(float %extracted, float %extracted1)
+  store %Interval %calltmp, ptr %2, align 4
+  %3 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 1
+  %extracted2 = extractvalue %Vec3 %0, 1
+  %extracted3 = extractvalue %Vec3 %1, 1
+  %calltmp4 = call %Interval @new_0.13(float %extracted2, float %extracted3)
+  store %Interval %calltmp4, ptr %3, align 4
+  %4 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 2
+  %extracted5 = extractvalue %Vec3 %0, 2
+  %extracted6 = extractvalue %Vec3 %1, 2
+  %calltmp7 = call %Interval @new_0.13(float %extracted5, float %extracted6)
+  store %Interval %calltmp7, ptr %4, align 4
+  %readtmp = load %AABB, ptr %result, align 4
+  ret %AABB %readtmp
+}
+
+define %Interval @new_0.13(float %0, float %1) {
+entry:
+  %result = alloca %Interval, align 8
+  %2 = getelementptr inbounds %Interval, ptr %result, i32 0, i32 1
+  store float %1, ptr %2, align 4
+  %3 = getelementptr inbounds %Interval, ptr %result, i32 0, i32 0
+  store float %0, ptr %3, align 4
+  %readtmp = load %Interval, ptr %result, align 4
+  ret %Interval %readtmp
+}
+
+define %AABB @pad_0(%AABB %0) {
+entry:
+  %result = alloca %AABB, align 8
+  store %AABB %0, ptr %result, align 4
+  %extracted = extractvalue %AABB %0, 0
+  %calltmp = call float @size_0(%Interval %extracted)
+  %lttmp = fcmp ule float %calltmp, 0x3F1A36E2E0000000
+  %ifcond = icmp ne i1 %lttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %1 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 0
+  %extracted1 = extractvalue %AABB %0, 0
+  %calltmp2 = call %Interval @expand_0(%Interval %extracted1, float 0x3F1A36E2E0000000)
+  store %Interval %calltmp2, ptr %1, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %extracted3 = extractvalue %AABB %0, 1
+  %calltmp4 = call float @size_0(%Interval %extracted3)
+  %lttmp5 = fcmp ule float %calltmp4, 0x3F1A36E2E0000000
+  %ifcond6 = icmp ne i1 %lttmp5, false
+  br i1 %ifcond6, label %ifbody7, label %ifmerge8
+
+ifbody7:                                          ; preds = %ifmerge
+  %2 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 1
+  %extracted9 = extractvalue %AABB %0, 1
+  %calltmp10 = call %Interval @expand_0(%Interval %extracted9, float 0x3F1A36E2E0000000)
+  store %Interval %calltmp10, ptr %2, align 4
+  br label %ifmerge8
+
+ifmerge8:                                         ; preds = %ifbody7, %ifmerge
+  %extracted11 = extractvalue %AABB %0, 2
+  %calltmp12 = call float @size_0(%Interval %extracted11)
+  %lttmp13 = fcmp ule float %calltmp12, 0x3F1A36E2E0000000
+  %ifcond14 = icmp ne i1 %lttmp13, false
+  br i1 %ifcond14, label %ifbody15, label %ifmerge16
+
+ifbody15:                                         ; preds = %ifmerge8
+  %3 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 2
+  %extracted17 = extractvalue %AABB %0, 2
+  %calltmp18 = call %Interval @expand_0(%Interval %extracted17, float 0x3F1A36E2E0000000)
+  store %Interval %calltmp18, ptr %3, align 4
+  br label %ifmerge16
+
+ifmerge16:                                        ; preds = %ifbody15, %ifmerge8
+  %readtmp = load %AABB, ptr %result, align 4
+  ret %AABB %readtmp
+}
+
+define float @size_0(%Interval %0) {
+entry:
+  %extracted = extractvalue %Interval %0, 1
+  %extracted1 = extractvalue %Interval %0, 0
+  %subtmp = fsub float %extracted, %extracted1
+  ret float %subtmp
+}
+
+define %Interval @expand_0(%Interval %0, float %1) {
+entry:
+  %divtmp = fdiv float %1, 2.000000e+00
+  %extracted = extractvalue %Interval %0, 0
+  %subtmp = fsub float %extracted, %divtmp
+  %extracted1 = extractvalue %Interval %0, 1
+  %addtmp = fadd float %extracted1, %divtmp
+  %calltmp = call %Interval @new_0.13(float %subtmp, float %addtmp)
+  ret %Interval %calltmp
+}
+
+define %Hittable @new_0.14(ptr %0, %Vec3 %1) {
+entry:
+  %result = alloca %Hittable, align 8
+  %readtmp = load %Quad, ptr %0, align 8
+  %2 = getelementptr inbounds %Hittable, ptr %result, i32 0, i32 0
+  store %Vec3 %1, ptr %2, align 4
+  %3 = getelementptr inbounds %Hittable, ptr %result, i32 0, i32 1
+  %calltmp = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  store %Vec3 %calltmp, ptr %3, align 4
+  %4 = getelementptr inbounds %Hittable, ptr %result, i32 0, i32 2
+  %5 = getelementptr inbounds %HittableVTable, ptr %4, i32 0, i32 0
+  store ptr @checkHit_0, ptr %5, align 8
+  %6 = getelementptr inbounds %Hittable, ptr %result, i32 0, i32 2
+  %7 = getelementptr inbounds %HittableVTable, ptr %6, i32 0, i32 1
+  store ptr @boundingBox_0, ptr %7, align 8
+  %8 = getelementptr inbounds %Hittable, ptr %result, i32 0, i32 3
+  store ptr %0, ptr %8, align 8
+  %readtmp1 = load %Hittable, ptr %result, align 8
+  ret %Hittable %readtmp1
+}
+
+define i1 @checkHit_0(ptr %0, %HRay %1, %Vec3 %2, %Interval %3, ptr %4) {
+entry:
+  %5 = getelementptr inbounds %Quad, ptr %0, i32 0, i32 5
+  %readtmp = load %Vec3, ptr %5, align 4
+  %extracted = extractvalue %HRay %1, 1
+  %calltmp = call float @dot_0(%Vec3 %readtmp, %Vec3 %extracted)
+  %calltmp1 = call float @fabsf(float %calltmp)
+  %lttmp = fcmp ule float %calltmp1, 0x3F1A36E2E0000000
+  %ifcond = icmp ne i1 %lttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  ret i1 false
+
+ifmerge:                                          ; preds = %entry
+  %6 = getelementptr inbounds %Quad, ptr %0, i32 0, i32 6
+  %readtmp2 = load float, ptr %6, align 4
+  %7 = getelementptr inbounds %Quad, ptr %0, i32 0, i32 5
+  %readtmp3 = load %Vec3, ptr %7, align 4
+  %extracted4 = extractvalue %HRay %1, 0
+  %calltmp5 = call float @dot_0(%Vec3 %readtmp3, %Vec3 %extracted4)
+  %subtmp = fsub float %readtmp2, %calltmp5
+  %divtmp = fdiv float %subtmp, %calltmp
+  %calltmp6 = call i1 @contains_0(%Interval %3, float %divtmp)
+  %nottmp = xor i1 %calltmp6, true
+  %ifcond7 = icmp ne i1 %nottmp, false
+  br i1 %ifcond7, label %ifbody8, label %ifmerge9
+
+ifbody8:                                          ; preds = %ifmerge
+  ret i1 false
+
+ifmerge9:                                         ; preds = %ifmerge
+  %extracted10 = extractvalue %HRay %1, 0
+  %extracted11 = extractvalue %HRay %1, 1
+  %calltmp12 = call %Vec3 @mul_0(%Vec3 %extracted11, float %divtmp)
+  %calltmp13 = call %Vec3 @add_0(%Vec3 %extracted10, %Vec3 %calltmp12)
+  %8 = getelementptr inbounds %Quad, ptr %0, i32 0, i32 0
+  %readtmp14 = load %Vec3, ptr %8, align 4
+  %calltmp15 = call %Vec3 @sub_0(%Vec3 %calltmp13, %Vec3 %readtmp14)
+  %9 = getelementptr inbounds %Quad, ptr %0, i32 0, i32 3
+  %readtmp16 = load %Vec3, ptr %9, align 4
+  %10 = getelementptr inbounds %Quad, ptr %0, i32 0, i32 2
+  %readtmp17 = load %Vec3, ptr %10, align 4
+  %calltmp18 = call %Vec3 @cross_0(%Vec3 %calltmp15, %Vec3 %readtmp17)
+  %calltmp19 = call float @dot_0(%Vec3 %readtmp16, %Vec3 %calltmp18)
+  %11 = getelementptr inbounds %Quad, ptr %0, i32 0, i32 3
+  %readtmp20 = load %Vec3, ptr %11, align 4
+  %12 = getelementptr inbounds %Quad, ptr %0, i32 0, i32 1
+  %readtmp21 = load %Vec3, ptr %12, align 4
+  %calltmp22 = call %Vec3 @cross_0(%Vec3 %readtmp21, %Vec3 %calltmp15)
+  %calltmp23 = call float @dot_0(%Vec3 %readtmp20, %Vec3 %calltmp22)
+  %calltmp24 = call i1 @is_interior_0(float %calltmp19, float %calltmp23, ptr %4)
+  %nottmp25 = xor i1 %calltmp24, true
+  %ifcond26 = icmp ne i1 %nottmp25, false
+  br i1 %ifcond26, label %ifbody27, label %ifmerge28
+
+ifbody27:                                         ; preds = %ifmerge9
+  ret i1 false
+
+ifmerge28:                                        ; preds = %ifmerge9
+  %13 = getelementptr inbounds %HitRecord, ptr %4, i32 0, i32 2
+  store float %divtmp, ptr %13, align 4
+  %14 = getelementptr inbounds %HitRecord, ptr %4, i32 0, i32 0
+  store %Vec3 %calltmp13, ptr %14, align 4
+  %15 = getelementptr inbounds %HitRecord, ptr %4, i32 0, i32 6
+  %16 = getelementptr inbounds %Quad, ptr %0, i32 0, i32 4
+  %readtmp29 = load ptr, ptr %16, align 8
+  store ptr %readtmp29, ptr %15, align 8
+  %extracted30 = extractvalue %HRay %1, 1
+  %17 = getelementptr inbounds %Quad, ptr %0, i32 0, i32 5
+  %readtmp31 = load %Vec3, ptr %17, align 4
+  %calltmp32 = call void @set_face_normal_0(ptr %4, %Vec3 %extracted30, %Vec3 %readtmp31)
+  ret i1 true
+}
+
+define i1 @contains_0(%Interval %0, float %1) {
+entry:
+  %extracted = extractvalue %Interval %0, 0
+  %gttmp = fcmp uge float %extracted, %1
+  %extracted1 = extractvalue %Interval %0, 1
+  %lttmp = fcmp ule float %extracted1, %1
+  %ortmp = or i1 %gttmp, %lttmp
+  %nottmp = xor i1 %ortmp, true
+  ret i1 %nottmp
+}
+
+define i1 @is_interior_0(float %0, float %1, ptr %2) {
+entry:
+  %lttmp = fcmp ule float %0, 0.000000e+00
+  %gttmp = fcmp uge float %0, 1.000000e+00
+  %ortmp = or i1 %lttmp, %gttmp
+  %lttmp1 = fcmp ule float %1, 0.000000e+00
+  %ortmp2 = or i1 %ortmp, %lttmp1
+  %gttmp3 = fcmp uge float %1, 1.000000e+00
+  %ortmp4 = or i1 %ortmp2, %gttmp3
+  %ifcond = icmp ne i1 %ortmp4, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  ret i1 false
+
+ifmerge:                                          ; preds = %entry
+  %3 = getelementptr inbounds %HitRecord, ptr %2, i32 0, i32 3
+  store float %0, ptr %3, align 4
+  %4 = getelementptr inbounds %HitRecord, ptr %2, i32 0, i32 4
+  store float %1, ptr %4, align 4
+  ret i1 true
+}
+
+define void @set_face_normal_0(ptr %0, %Vec3 %1, %Vec3 %2) {
+entry:
+  %3 = getelementptr inbounds %HitRecord, ptr %0, i32 0, i32 5
+  %calltmp = call float @dot_0(%Vec3 %1, %Vec3 %2)
+  %lttmp = fcmp ule float %calltmp, 0.000000e+00
+  store i1 %lttmp, ptr %3, align 1
+  %4 = getelementptr inbounds %HitRecord, ptr %0, i32 0, i32 1
+  store %Vec3 %2, ptr %4, align 4
+  %5 = getelementptr inbounds %HitRecord, ptr %0, i32 0, i32 5
+  %readtmp = load i1, ptr %5, align 1
+  %nottmp = xor i1 %readtmp, true
+  %ifcond = icmp ne i1 %nottmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %6 = getelementptr inbounds %HitRecord, ptr %0, i32 0, i32 1
+  %calltmp1 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %7 = getelementptr inbounds %HitRecord, ptr %0, i32 0, i32 1
+  %readtmp2 = load %Vec3, ptr %7, align 4
+  %calltmp3 = call %Vec3 @sub_0(%Vec3 %calltmp1, %Vec3 %readtmp2)
+  store %Vec3 %calltmp3, ptr %6, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  ret void
+}
+
+define %AABB @boundingBox_0(ptr %0) {
+entry:
+  %readtmp = load %Quad, ptr %0, align 8
+  %extracted = extractvalue %Quad %readtmp, 7
+  ret %AABB %extracted
+}
+
+define void @append_0(ptr %0, %Hittable %1) {
+entry:
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp1 = load i32, ptr %3, align 4
+  %addtmp = add i32 %readtmp1, 1
+  %lttmp = icmp ult i32 %readtmp, %addtmp
+  %ifcond = icmp ne i1 %lttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %calltmp = call void @extend_0(ptr %0)
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %4, align 8
+  %tmp_int = ptrtoint ptr %readtmp2 to i64
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp3 = load i32, ptr %5, align 4
+  %multmp = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %tmp_float = zext i32 %multmp to i64
+  %addtmp4 = add i64 %tmp_int, %tmp_float
+  %tmp_pointer = inttoptr i64 %addtmp4 to ptr
+  store %Hittable %1, ptr %tmp_pointer, align 8
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp5 = load i32, ptr %6, align 4
+  %addtmp6 = add i32 %readtmp5, 1
+  store i32 %addtmp6, ptr %6, align 4
+  ret void
+}
+
+define void @extend_0(ptr %0) {
+entry:
+  %1 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %multmp = mul i32 %readtmp, 2
+  store i32 %multmp, ptr %1, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp1 = load i32, ptr %3, align 4
+  %neqtmp = icmp eq i32 0, %readtmp1
+  %ifcond = icmp ne i1 %neqtmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  store i32 1, ptr %4, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %6, align 8
+  %7 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp3 = load i32, ptr %7, align 4
+  %multmp4 = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %calltmp = call ptr @realloc(ptr %readtmp2, i32 %multmp4)
+  store ptr %calltmp, ptr %5, align 8
+  ret void
+}
+
+declare ptr @realloc(ptr, i32)
+
+define void @append_0.15(ptr %0, %Hittable %1) {
+entry:
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp1 = load i32, ptr %3, align 4
+  %addtmp = add i32 %readtmp1, 1
+  %lttmp = icmp ult i32 %readtmp, %addtmp
+  %ifcond = icmp ne i1 %lttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %calltmp = call void @extend_0.16(ptr %0)
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %4, align 8
+  %tmp_int = ptrtoint ptr %readtmp2 to i64
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp3 = load i32, ptr %5, align 4
+  %multmp = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %tmp_float = zext i32 %multmp to i64
+  %addtmp4 = add i64 %tmp_int, %tmp_float
+  %tmp_pointer = inttoptr i64 %addtmp4 to ptr
+  store %Hittable %1, ptr %tmp_pointer, align 8
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp5 = load i32, ptr %6, align 4
+  %addtmp6 = add i32 %readtmp5, 1
+  store i32 %addtmp6, ptr %6, align 4
+  ret void
+}
+
+define void @extend_0.16(ptr %0) {
+entry:
+  %1 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %multmp = mul i32 %readtmp, 2
+  store i32 %multmp, ptr %1, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp1 = load i32, ptr %3, align 4
+  %neqtmp = icmp eq i32 0, %readtmp1
+  %ifcond = icmp ne i1 %neqtmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  store i32 1, ptr %4, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %6, align 8
+  %7 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp3 = load i32, ptr %7, align 4
+  %multmp4 = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %calltmp = call ptr @realloc(ptr %readtmp2, i32 %multmp4)
+  store ptr %calltmp, ptr %5, align 8
+  ret void
+}
+
+define void @append_0.17(ptr %0, %Hittable %1) {
+entry:
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp1 = load i32, ptr %3, align 4
+  %addtmp = add i32 %readtmp1, 1
+  %lttmp = icmp ult i32 %readtmp, %addtmp
+  %ifcond = icmp ne i1 %lttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %calltmp = call void @extend_0.18(ptr %0)
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %4, align 8
+  %tmp_int = ptrtoint ptr %readtmp2 to i64
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp3 = load i32, ptr %5, align 4
+  %multmp = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %tmp_float = zext i32 %multmp to i64
+  %addtmp4 = add i64 %tmp_int, %tmp_float
+  %tmp_pointer = inttoptr i64 %addtmp4 to ptr
+  store %Hittable %1, ptr %tmp_pointer, align 8
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp5 = load i32, ptr %6, align 4
+  %addtmp6 = add i32 %readtmp5, 1
+  store i32 %addtmp6, ptr %6, align 4
+  ret void
+}
+
+define void @extend_0.18(ptr %0) {
+entry:
+  %1 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %multmp = mul i32 %readtmp, 2
+  store i32 %multmp, ptr %1, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp1 = load i32, ptr %3, align 4
+  %neqtmp = icmp eq i32 0, %readtmp1
+  %ifcond = icmp ne i1 %neqtmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  store i32 1, ptr %4, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %6, align 8
+  %7 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp3 = load i32, ptr %7, align 4
+  %multmp4 = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %calltmp = call ptr @realloc(ptr %readtmp2, i32 %multmp4)
+  store ptr %calltmp, ptr %5, align 8
+  ret void
+}
+
+define void @append_0.19(ptr %0, %Hittable %1) {
+entry:
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp1 = load i32, ptr %3, align 4
+  %addtmp = add i32 %readtmp1, 1
+  %lttmp = icmp ult i32 %readtmp, %addtmp
+  %ifcond = icmp ne i1 %lttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %calltmp = call void @extend_0.20(ptr %0)
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %4, align 8
+  %tmp_int = ptrtoint ptr %readtmp2 to i64
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp3 = load i32, ptr %5, align 4
+  %multmp = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %tmp_float = zext i32 %multmp to i64
+  %addtmp4 = add i64 %tmp_int, %tmp_float
+  %tmp_pointer = inttoptr i64 %addtmp4 to ptr
+  store %Hittable %1, ptr %tmp_pointer, align 8
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp5 = load i32, ptr %6, align 4
+  %addtmp6 = add i32 %readtmp5, 1
+  store i32 %addtmp6, ptr %6, align 4
+  ret void
+}
+
+define void @extend_0.20(ptr %0) {
+entry:
+  %1 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %multmp = mul i32 %readtmp, 2
+  store i32 %multmp, ptr %1, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp1 = load i32, ptr %3, align 4
+  %neqtmp = icmp eq i32 0, %readtmp1
+  %ifcond = icmp ne i1 %neqtmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  store i32 1, ptr %4, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %6, align 8
+  %7 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp3 = load i32, ptr %7, align 4
+  %multmp4 = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %calltmp = call ptr @realloc(ptr %readtmp2, i32 %multmp4)
+  store ptr %calltmp, ptr %5, align 8
+  ret void
+}
+
+define void @append_0.21(ptr %0, %Hittable %1) {
+entry:
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp1 = load i32, ptr %3, align 4
+  %addtmp = add i32 %readtmp1, 1
+  %lttmp = icmp ult i32 %readtmp, %addtmp
+  %ifcond = icmp ne i1 %lttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %calltmp = call void @extend_0.22(ptr %0)
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %4, align 8
+  %tmp_int = ptrtoint ptr %readtmp2 to i64
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp3 = load i32, ptr %5, align 4
+  %multmp = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %tmp_float = zext i32 %multmp to i64
+  %addtmp4 = add i64 %tmp_int, %tmp_float
+  %tmp_pointer = inttoptr i64 %addtmp4 to ptr
+  store %Hittable %1, ptr %tmp_pointer, align 8
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp5 = load i32, ptr %6, align 4
+  %addtmp6 = add i32 %readtmp5, 1
+  store i32 %addtmp6, ptr %6, align 4
+  ret void
+}
+
+define void @extend_0.22(ptr %0) {
+entry:
+  %1 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %multmp = mul i32 %readtmp, 2
+  store i32 %multmp, ptr %1, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp1 = load i32, ptr %3, align 4
+  %neqtmp = icmp eq i32 0, %readtmp1
+  %ifcond = icmp ne i1 %neqtmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  store i32 1, ptr %4, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %6, align 8
+  %7 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp3 = load i32, ptr %7, align 4
+  %multmp4 = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %calltmp = call ptr @realloc(ptr %readtmp2, i32 %multmp4)
+  store ptr %calltmp, ptr %5, align 8
+  ret void
+}
+
+define void @append_0.23(ptr %0, %Hittable %1) {
+entry:
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp1 = load i32, ptr %3, align 4
+  %addtmp = add i32 %readtmp1, 1
+  %lttmp = icmp ult i32 %readtmp, %addtmp
+  %ifcond = icmp ne i1 %lttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %calltmp = call void @extend_0.24(ptr %0)
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %4, align 8
+  %tmp_int = ptrtoint ptr %readtmp2 to i64
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp3 = load i32, ptr %5, align 4
+  %multmp = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %tmp_float = zext i32 %multmp to i64
+  %addtmp4 = add i64 %tmp_int, %tmp_float
+  %tmp_pointer = inttoptr i64 %addtmp4 to ptr
+  store %Hittable %1, ptr %tmp_pointer, align 8
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 1
+  %readtmp5 = load i32, ptr %6, align 4
+  %addtmp6 = add i32 %readtmp5, 1
+  store i32 %addtmp6, ptr %6, align 4
+  ret void
+}
+
+define void @extend_0.24(ptr %0) {
+entry:
+  %1 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %2 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %multmp = mul i32 %readtmp, 2
+  store i32 %multmp, ptr %1, align 4
+  %3 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp1 = load i32, ptr %3, align 4
+  %neqtmp = icmp eq i32 0, %readtmp1
+  %ifcond = icmp ne i1 %neqtmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %4 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  store i32 1, ptr %4, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %5 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %6 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %6, align 8
+  %7 = getelementptr inbounds %ArrayList.5, ptr %0, i32 0, i32 0
+  %readtmp3 = load i32, ptr %7, align 4
+  %multmp4 = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %calltmp = call ptr @realloc(ptr %readtmp2, i32 %multmp4)
+  store ptr %calltmp, ptr %5, align 8
+  ret void
+}
+
+define %Hittable @create_box_0(%Vec3 %0, %Vec3 %1, ptr %2) {
+entry:
+  %calltmp = call ptr @malloc(i32 ptrtoint (ptr getelementptr inbounds ([1 x %Group], ptr null, i32 1) to i32))
+  %calltmp1 = call %Group @new_0.25()
+  store %Group %calltmp1, ptr %calltmp, align 8
+  %extracted = extractvalue %Vec3 %0, 0
+  %extracted2 = extractvalue %Vec3 %1, 0
+  %calltmp3 = call float @fminf(float %extracted, float %extracted2)
+  %extracted4 = extractvalue %Vec3 %0, 1
+  %extracted5 = extractvalue %Vec3 %1, 1
+  %calltmp6 = call float @fminf(float %extracted4, float %extracted5)
+  %extracted7 = extractvalue %Vec3 %0, 2
+  %extracted8 = extractvalue %Vec3 %1, 2
+  %calltmp9 = call float @fminf(float %extracted7, float %extracted8)
+  %calltmp10 = call %Vec3 @new_0(float %calltmp3, float %calltmp6, float %calltmp9)
+  %extracted11 = extractvalue %Vec3 %0, 0
+  %extracted12 = extractvalue %Vec3 %1, 0
+  %calltmp13 = call float @fmaxf(float %extracted11, float %extracted12)
+  %extracted14 = extractvalue %Vec3 %0, 1
+  %extracted15 = extractvalue %Vec3 %1, 1
+  %calltmp16 = call float @fmaxf(float %extracted14, float %extracted15)
+  %extracted17 = extractvalue %Vec3 %0, 2
+  %extracted18 = extractvalue %Vec3 %1, 2
+  %calltmp19 = call float @fmaxf(float %extracted17, float %extracted18)
+  %calltmp20 = call %Vec3 @new_0(float %calltmp13, float %calltmp16, float %calltmp19)
+  %extracted21 = extractvalue %Vec3 %calltmp20, 0
+  %extracted22 = extractvalue %Vec3 %calltmp10, 0
+  %subtmp = fsub float %extracted21, %extracted22
+  %calltmp23 = call %Vec3 @new_0(float %subtmp, float 0.000000e+00, float 0.000000e+00)
+  %extracted24 = extractvalue %Vec3 %calltmp20, 1
+  %extracted25 = extractvalue %Vec3 %calltmp10, 1
+  %subtmp26 = fsub float %extracted24, %extracted25
+  %calltmp27 = call %Vec3 @new_0(float 0.000000e+00, float %subtmp26, float 0.000000e+00)
+  %extracted28 = extractvalue %Vec3 %calltmp20, 2
+  %extracted29 = extractvalue %Vec3 %calltmp10, 2
+  %subtmp30 = fsub float %extracted28, %extracted29
+  %calltmp31 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float %subtmp30)
+  %calltmp32 = call ptr @malloc(i32 ptrtoint (ptr getelementptr inbounds ([1 x [6 x %Quad]], ptr null, i32 1) to i32))
+  %elemtemp = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 0
+  %extracted33 = extractvalue %Vec3 %calltmp10, 0
+  %extracted34 = extractvalue %Vec3 %calltmp10, 1
+  %extracted35 = extractvalue %Vec3 %calltmp20, 2
+  %calltmp36 = call %Vec3 @new_0(float %extracted33, float %extracted34, float %extracted35)
+  %calltmp37 = call %Quad @new_0.12(%Vec3 %calltmp36, %Vec3 %calltmp23, %Vec3 %calltmp27, ptr %2)
+  store %Quad %calltmp37, ptr %elemtemp, align 8
+  %elemtemp38 = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 1
+  %extracted39 = extractvalue %Vec3 %calltmp20, 0
+  %extracted40 = extractvalue %Vec3 %calltmp10, 1
+  %extracted41 = extractvalue %Vec3 %calltmp20, 2
+  %calltmp42 = call %Vec3 @new_0(float %extracted39, float %extracted40, float %extracted41)
+  %calltmp43 = call %Vec3 @neg_0.27(%Vec3 %calltmp31)
+  %calltmp44 = call %Quad @new_0.12(%Vec3 %calltmp42, %Vec3 %calltmp43, %Vec3 %calltmp27, ptr %2)
+  store %Quad %calltmp44, ptr %elemtemp38, align 8
+  %elemtemp45 = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 2
+  %extracted46 = extractvalue %Vec3 %calltmp20, 0
+  %extracted47 = extractvalue %Vec3 %calltmp10, 1
+  %extracted48 = extractvalue %Vec3 %calltmp10, 2
+  %calltmp49 = call %Vec3 @new_0(float %extracted46, float %extracted47, float %extracted48)
+  %calltmp50 = call %Vec3 @neg_0.27(%Vec3 %calltmp23)
+  %calltmp51 = call %Quad @new_0.12(%Vec3 %calltmp49, %Vec3 %calltmp50, %Vec3 %calltmp27, ptr %2)
+  store %Quad %calltmp51, ptr %elemtemp45, align 8
+  %elemtemp52 = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 3
+  %extracted53 = extractvalue %Vec3 %calltmp10, 0
+  %extracted54 = extractvalue %Vec3 %calltmp10, 1
+  %extracted55 = extractvalue %Vec3 %calltmp10, 2
+  %calltmp56 = call %Vec3 @new_0(float %extracted53, float %extracted54, float %extracted55)
+  %calltmp57 = call %Quad @new_0.12(%Vec3 %calltmp56, %Vec3 %calltmp31, %Vec3 %calltmp27, ptr %2)
+  store %Quad %calltmp57, ptr %elemtemp52, align 8
+  %elemtemp58 = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 4
+  %extracted59 = extractvalue %Vec3 %calltmp10, 0
+  %extracted60 = extractvalue %Vec3 %calltmp20, 1
+  %extracted61 = extractvalue %Vec3 %calltmp20, 2
+  %calltmp62 = call %Vec3 @new_0(float %extracted59, float %extracted60, float %extracted61)
+  %calltmp63 = call %Vec3 @neg_0.27(%Vec3 %calltmp31)
+  %calltmp64 = call %Quad @new_0.12(%Vec3 %calltmp62, %Vec3 %calltmp23, %Vec3 %calltmp63, ptr %2)
+  store %Quad %calltmp64, ptr %elemtemp58, align 8
+  %elemtemp65 = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 4
+  %extracted66 = extractvalue %Vec3 %calltmp10, 0
+  %extracted67 = extractvalue %Vec3 %calltmp10, 1
+  %extracted68 = extractvalue %Vec3 %calltmp10, 2
+  %calltmp69 = call %Vec3 @new_0(float %extracted66, float %extracted67, float %extracted68)
+  %calltmp70 = call %Quad @new_0.12(%Vec3 %calltmp69, %Vec3 %calltmp23, %Vec3 %calltmp31, ptr %2)
+  store %Quad %calltmp70, ptr %elemtemp65, align 8
+  %elemtemp71 = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 0
+  %calltmp72 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp73 = call %Hittable @new_0.14(ptr %elemtemp71, %Vec3 %calltmp72)
+  %calltmp74 = call void @add_0.28(ptr %calltmp, %Hittable %calltmp73)
+  %elemtemp75 = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 1
+  %calltmp76 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp77 = call %Hittable @new_0.14(ptr %elemtemp75, %Vec3 %calltmp76)
+  %calltmp78 = call void @add_0.28(ptr %calltmp, %Hittable %calltmp77)
+  %elemtemp79 = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 2
+  %calltmp80 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp81 = call %Hittable @new_0.14(ptr %elemtemp79, %Vec3 %calltmp80)
+  %calltmp82 = call void @add_0.28(ptr %calltmp, %Hittable %calltmp81)
+  %elemtemp83 = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 3
+  %calltmp84 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp85 = call %Hittable @new_0.14(ptr %elemtemp83, %Vec3 %calltmp84)
+  %calltmp86 = call void @add_0.28(ptr %calltmp, %Hittable %calltmp85)
+  %elemtemp87 = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 4
+  %calltmp88 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp89 = call %Hittable @new_0.14(ptr %elemtemp87, %Vec3 %calltmp88)
+  %calltmp90 = call void @add_0.28(ptr %calltmp, %Hittable %calltmp89)
+  %elemtemp91 = getelementptr inbounds [6 x %Quad], ptr %calltmp32, i32 0, i32 5
+  %calltmp92 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp93 = call %Hittable @new_0.14(ptr %elemtemp91, %Vec3 %calltmp92)
+  %calltmp94 = call void @add_0.28(ptr %calltmp, %Hittable %calltmp93)
+  %calltmp95 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %calltmp96 = call %Hittable @new_1.34(ptr %calltmp, %Vec3 %calltmp95)
+  ret %Hittable %calltmp96
+}
+
+define %Group @new_0.25() {
+entry:
+  %result = alloca %Group, align 8
+  %0 = getelementptr inbounds %Group, ptr %result, i32 0, i32 0
+  %calltmp = call %ArrayList.13 @init_0.26()
+  store %ArrayList.13 %calltmp, ptr %0, align 8
+  %readtmp = load %Group, ptr %result, align 8
+  ret %Group %readtmp
+}
+
+define %ArrayList.13 @init_0.26() {
+entry:
+  %result = alloca %ArrayList.13, align 8
+  %0 = getelementptr inbounds %ArrayList.13, ptr %result, i32 0, i32 1
+  store i32 0, ptr %0, align 4
+  %1 = getelementptr inbounds %ArrayList.13, ptr %result, i32 0, i32 0
+  store i32 0, ptr %1, align 4
+  %2 = getelementptr inbounds %ArrayList.13, ptr %result, i32 0, i32 2
+  store ptr null, ptr %2, align 8
+  %readtmp = load %ArrayList.13, ptr %result, align 8
+  ret %ArrayList.13 %readtmp
+}
+
+declare float @fminf(float, float)
+
+declare float @fmaxf(float, float)
+
+define %Vec3 @neg_0.27(%Vec3 %0) {
+entry:
+  %extracted = extractvalue %Vec3 %0, 0
+  %subtmp = fsub float 0.000000e+00, %extracted
+  %extracted1 = extractvalue %Vec3 %0, 1
+  %subtmp2 = fsub float 0.000000e+00, %extracted1
+  %extracted3 = extractvalue %Vec3 %0, 2
+  %subtmp4 = fsub float 0.000000e+00, %extracted3
+  %calltmp = call %Vec3 @new_0(float %subtmp, float %subtmp2, float %subtmp4)
+  ret %Vec3 %calltmp
+}
+
+define void @add_0.28(ptr %0, %Hittable %1) {
+entry:
+  %2 = getelementptr inbounds %Group, ptr %0, i32 0, i32 0
+  %calltmp = call void @append_0.29(ptr %2, %Hittable %1)
+  %3 = getelementptr inbounds %Group, ptr %0, i32 0, i32 1
+  %readtmp = load %AABB, ptr %3, align 4
+  %calltmp1 = call %AABB @boundingBox_0.31(%Hittable %1)
+  %calltmp2 = call %AABB @combine_0(%AABB %readtmp, %AABB %calltmp1)
+  store %AABB %calltmp2, ptr %3, align 4
+  ret void
+}
+
+define void @append_0.29(ptr %0, %Hittable %1) {
+entry:
+  %2 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %3 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 1
+  %readtmp1 = load i32, ptr %3, align 4
+  %addtmp = add i32 %readtmp1, 1
+  %lttmp = icmp ult i32 %readtmp, %addtmp
+  %ifcond = icmp ne i1 %lttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %calltmp = call void @extend_0.30(ptr %0)
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %4 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %4, align 8
+  %tmp_int = ptrtoint ptr %readtmp2 to i64
+  %5 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 1
+  %readtmp3 = load i32, ptr %5, align 4
+  %multmp = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %tmp_float = zext i32 %multmp to i64
+  %addtmp4 = add i64 %tmp_int, %tmp_float
+  %tmp_pointer = inttoptr i64 %addtmp4 to ptr
+  store %Hittable %1, ptr %tmp_pointer, align 8
+  %6 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 1
+  %readtmp5 = load i32, ptr %6, align 4
+  %addtmp6 = add i32 %readtmp5, 1
+  store i32 %addtmp6, ptr %6, align 4
+  ret void
+}
+
+define void @extend_0.30(ptr %0) {
+entry:
+  %1 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 0
+  %2 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 0
+  %readtmp = load i32, ptr %2, align 4
+  %multmp = mul i32 %readtmp, 2
+  store i32 %multmp, ptr %1, align 4
+  %3 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 0
+  %readtmp1 = load i32, ptr %3, align 4
+  %neqtmp = icmp eq i32 0, %readtmp1
+  %ifcond = icmp ne i1 %neqtmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %4 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 0
+  store i32 1, ptr %4, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %5 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 2
+  %6 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 2
+  %readtmp2 = load ptr, ptr %6, align 8
+  %7 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 0
+  %readtmp3 = load i32, ptr %7, align 4
+  %multmp4 = mul i32 %readtmp3, ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %calltmp = call ptr @realloc(ptr %readtmp2, i32 %multmp4)
+  store ptr %calltmp, ptr %5, align 8
+  ret void
+}
+
+define %AABB @boundingBox_0.31(%Hittable %0) {
+entry:
+  %extracted = extractvalue %Hittable %0, 3
+  %extracted1 = extractvalue %Hittable %0, 2
+  %extracted2 = extractvalue %HittableVTable %extracted1, 1
+  %calltmp = call %AABB %extracted2(ptr %extracted)
+  %extracted3 = extractvalue %Hittable %0, 0
+  %calltmp4 = call %AABB @offset_0(%AABB %calltmp, %Vec3 %extracted3)
+  ret %AABB %calltmp4
+}
+
+define %AABB @offset_0(%AABB %0, %Vec3 %1) {
+entry:
+  %result = alloca %AABB, align 8
+  %2 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 0
+  %extracted = extractvalue %AABB %0, 0
+  %extracted1 = extractvalue %Vec3 %1, 0
+  %calltmp = call %Interval @offset_0.32(%Interval %extracted, float %extracted1)
+  store %Interval %calltmp, ptr %2, align 4
+  %3 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 1
+  %extracted2 = extractvalue %AABB %0, 1
+  %extracted3 = extractvalue %Vec3 %1, 1
+  %calltmp4 = call %Interval @offset_0.32(%Interval %extracted2, float %extracted3)
+  store %Interval %calltmp4, ptr %3, align 4
+  %4 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 2
+  %extracted5 = extractvalue %AABB %0, 2
+  %extracted6 = extractvalue %Vec3 %1, 2
+  %calltmp7 = call %Interval @offset_0.32(%Interval %extracted5, float %extracted6)
+  store %Interval %calltmp7, ptr %4, align 4
+  %readtmp = load %AABB, ptr %result, align 4
+  ret %AABB %readtmp
+}
+
+define %Interval @offset_0.32(%Interval %0, float %1) {
+entry:
+  %extracted = extractvalue %Interval %0, 0
+  %addtmp = fadd float %extracted, %1
+  %extracted1 = extractvalue %Interval %0, 1
+  %addtmp2 = fadd float %extracted1, %1
+  %calltmp = call %Interval @new_0.13(float %addtmp, float %addtmp2)
+  ret %Interval %calltmp
+}
+
+define %AABB @combine_0(%AABB %0, %AABB %1) {
+entry:
+  %result = alloca %AABB, align 8
+  %2 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 0
+  %extracted = extractvalue %AABB %1, 0
+  %extracted1 = extractvalue %AABB %0, 0
+  %calltmp = call %Interval @combine_0.33(%Interval %extracted, %Interval %extracted1)
+  store %Interval %calltmp, ptr %2, align 4
+  %3 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 1
+  %extracted2 = extractvalue %AABB %1, 1
+  %extracted3 = extractvalue %AABB %0, 1
+  %calltmp4 = call %Interval @combine_0.33(%Interval %extracted2, %Interval %extracted3)
+  store %Interval %calltmp4, ptr %3, align 4
+  %4 = getelementptr inbounds %AABB, ptr %result, i32 0, i32 2
+  %extracted5 = extractvalue %AABB %1, 2
+  %extracted6 = extractvalue %AABB %0, 2
+  %calltmp7 = call %Interval @combine_0.33(%Interval %extracted5, %Interval %extracted6)
+  store %Interval %calltmp7, ptr %4, align 4
+  %readtmp = load %AABB, ptr %result, align 4
+  ret %AABB %readtmp
+}
+
+define %Interval @combine_0.33(%Interval %0, %Interval %1) {
+entry:
+  %extracted = extractvalue %Interval %0, 0
+  %extracted1 = extractvalue %Interval %1, 0
+  %calltmp = call float @fminf(float %extracted, float %extracted1)
+  %extracted2 = extractvalue %Interval %0, 1
+  %extracted3 = extractvalue %Interval %1, 1
+  %calltmp4 = call float @fmaxf(float %extracted2, float %extracted3)
+  %calltmp5 = call %Interval @new_0.13(float %calltmp, float %calltmp4)
+  ret %Interval %calltmp5
+}
+
+define %Hittable @new_1.34(ptr %0, %Vec3 %1) {
+entry:
+  %result = alloca %Hittable, align 8
+  %readtmp = load %Group, ptr %0, align 8
+  %2 = getelementptr inbounds %Hittable, ptr %result, i32 0, i32 0
+  store %Vec3 %1, ptr %2, align 4
+  %3 = getelementptr inbounds %Hittable, ptr %result, i32 0, i32 1
+  %calltmp = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  store %Vec3 %calltmp, ptr %3, align 4
+  %4 = getelementptr inbounds %Hittable, ptr %result, i32 0, i32 2
+  %5 = getelementptr inbounds %HittableVTable, ptr %4, i32 0, i32 0
+  store ptr @checkHit_0.35, ptr %5, align 8
+  %6 = getelementptr inbounds %Hittable, ptr %result, i32 0, i32 2
+  %7 = getelementptr inbounds %HittableVTable, ptr %6, i32 0, i32 1
+  store ptr @boundingBox_0.38, ptr %7, align 8
+  %8 = getelementptr inbounds %Hittable, ptr %result, i32 0, i32 3
+  store ptr %0, ptr %8, align 8
+  %readtmp1 = load %Hittable, ptr %result, align 8
+  ret %Hittable %readtmp1
+}
+
+define i1 @checkHit_0.35(ptr %0, %HRay %1, %Vec3 %2, %Interval %3, ptr %4) {
+entry:
+  %tmpRecord = alloca %HitRecord, align 8
+  %hit = alloca i1, align 1
+  %closest = alloca float, align 4
+  %idx = alloca i32, align 4
+  store i1 false, ptr %hit, align 1
+  %extracted = extractvalue %Interval %3, 1
+  store float %extracted, ptr %closest, align 4
+  store i32 0, ptr %idx, align 4
+  br label %whilehead
+
+whilehead:                                        ; preds = %ifmerge, %entry
+  %readtmp = load i32, ptr %idx, align 4
+  %5 = getelementptr inbounds %Group, ptr %0, i32 0, i32 0
+  %6 = getelementptr inbounds %ArrayList, ptr %5, i32 0, i32 1
+  %readtmp1 = load i32, ptr %6, align 4
+  %lttmp = icmp ult i32 %readtmp, %readtmp1
+  %docond = icmp ne i1 %lttmp, false
+  br i1 %docond, label %whilebody, label %whilemerge
+
+whilebody:                                        ; preds = %whilehead
+  %7 = getelementptr inbounds %Group, ptr %0, i32 0, i32 0
+  %readtmp2 = load i32, ptr %idx, align 4
+  %calltmp = call %Hittable @get_0(ptr %7, i32 %readtmp2)
+  %extracted3 = extractvalue %Interval %3, 0
+  %readtmp4 = load float, ptr %closest, align 4
+  %calltmp5 = call %Interval @new_0.13(float %extracted3, float %readtmp4)
+  %calltmp6 = call i1 @checkHit_0.37(%Hittable %calltmp, %Vec3 %2, %HRay %1, %Interval %calltmp5, ptr %tmpRecord)
+  %ifcond = icmp ne i1 %calltmp6, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+whilemerge:                                       ; preds = %whilehead
+  %readtmp10 = load i1, ptr %hit, align 1
+  ret i1 %readtmp10
+
+ifbody:                                           ; preds = %whilebody
+  store i1 true, ptr %hit, align 1
+  %8 = getelementptr inbounds %HitRecord, ptr %tmpRecord, i32 0, i32 2
+  %readtmp7 = load float, ptr %8, align 4
+  store float %readtmp7, ptr %closest, align 4
+  %readtmp8 = load %HitRecord, ptr %tmpRecord, align 8
+  store %HitRecord %readtmp8, ptr %4, align 8
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %whilebody
+  %readtmp9 = load i32, ptr %idx, align 4
+  %addtmp = add i32 %readtmp9, 1
+  store i32 %addtmp, ptr %idx, align 4
+  br label %whilehead
+}
+
+define %Hittable @get_0(ptr %0, i32 %1) {
+entry:
+  %2 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 1
+  %readtmp = load i32, ptr %2, align 4
+  %subtmp = sub i32 %readtmp, 1
+  %gttmp = icmp ugt i32 %1, %subtmp
+  %ifcond = icmp ne i1 %gttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %3 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 1
+  %readtmp1 = load i32, ptr %3, align 4
+  %tmp_float = zext i32 %readtmp1 to i64
+  %calltmp = call void @printint(i64 %tmp_float)
+  %calltmp2 = call void @printstr(ptr @str.36)
+  %calltmp3 = call void @exit(i32 1)
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %4 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 2
+  %readtmp4 = load ptr, ptr %4, align 8
+  %tmp_int = ptrtoint ptr %readtmp4 to i64
+  %tmp_float5 = zext i32 %1 to i64
+  %multmp = mul i64 %tmp_float5, i32 ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %addtmp = add i64 %tmp_int, %multmp
+  %tmp_pointer = inttoptr i64 %addtmp to ptr
+  %readtmp6 = load %Hittable, ptr %tmp_pointer, align 8
+  ret %Hittable %readtmp6
+}
+
+declare void @exit(i32)
+
+define i1 @checkHit_0.37(%Hittable %0, %Vec3 %1, %HRay %2, %Interval %3, ptr %4) {
+entry:
+  %extracted = extractvalue %Hittable %0, 0
+  %calltmp = call %Vec3 @add_0(%Vec3 %1, %Vec3 %extracted)
+  %extracted1 = extractvalue %Hittable %0, 3
+  %extracted2 = extractvalue %Hittable %0, 2
+  %extracted3 = extractvalue %HittableVTable %extracted2, 0
+  %calltmp4 = call i1 %extracted3(ptr %extracted1, %HRay %2, %Vec3 %calltmp, %Interval %3, ptr %4)
+  ret i1 %calltmp4
+}
+
+define %AABB @boundingBox_0.38(ptr %0) {
+entry:
+  %readtmp = load %Group, ptr %0, align 8
+  %extracted = extractvalue %Group %readtmp, 1
+  ret %AABB %extracted
+}
+
+define %RotateY @new_0.39(%Hittable %0, float %1) {
+entry:
+  %result = alloca %RotateY, align 8
+  %2 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 2
+  store %Hittable %0, ptr %2, align 8
+  %3 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 1
+  %calltmp = call float @sinf(float %1)
+  store float %calltmp, ptr %3, align 4
+  %4 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 0
+  %calltmp1 = call float @cosf(float %1)
+  store float %calltmp1, ptr %4, align 4
+  %5 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 3
+  %6 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 2
+  %readtmp = load %Hittable, ptr %6, align 8
+  %calltmp2 = call %AABB @boundingBox_0.31(%Hittable %readtmp)
+  store %AABB %calltmp2, ptr %5, align 4
+  %min = alloca %Vec3, align 8
+  %max = alloca %Vec3, align 8
+  %calltmp3 = call %Vec3 @new_0(float 0x7FF0000000000000, float 0x7FF0000000000000, float 0x7FF0000000000000)
+  store %Vec3 %calltmp3, ptr %min, align 4
+  %calltmp4 = call %Vec3 @new_0(float 0x7FF0000000000000, float 0x7FF0000000000000, float 0x7FF0000000000000)
+  %calltmp5 = call %Vec3 @neg_0.27(%Vec3 %calltmp4)
+  store %Vec3 %calltmp5, ptr %max, align 4
+  %i = alloca i32, align 4
+  %j = alloca i32, align 4
+  %k = alloca i32, align 4
+  %c = alloca i32, align 4
+  store i32 0, ptr %i, align 4
+  br label %whilehead
+
+whilehead:                                        ; preds = %whilemerge9, %entry
+  %readtmp6 = load i32, ptr %i, align 4
+  %lttmp = icmp ult i32 %readtmp6, 2
+  %docond = icmp ne i1 %lttmp, false
+  br i1 %docond, label %whilebody, label %whilemerge
+
+whilebody:                                        ; preds = %whilehead
+  store i32 0, ptr %j, align 4
+  br label %whilehead7
+
+whilemerge:                                       ; preds = %whilehead
+  %7 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 3
+  %readtmp86 = load %Vec3, ptr %min, align 4
+  %readtmp87 = load %Vec3, ptr %max, align 4
+  %calltmp88 = call %AABB @newV_0(%Vec3 %readtmp86, %Vec3 %readtmp87)
+  store %AABB %calltmp88, ptr %7, align 4
+  %readtmp89 = load %RotateY, ptr %result, align 8
+  ret %RotateY %readtmp89
+
+whilehead7:                                       ; preds = %whilemerge15, %whilebody
+  %readtmp10 = load i32, ptr %j, align 4
+  %lttmp11 = icmp ult i32 %readtmp10, 2
+  %docond12 = icmp ne i1 %lttmp11, false
+  br i1 %docond12, label %whilebody8, label %whilemerge9
+
+whilebody8:                                       ; preds = %whilehead7
+  store i32 0, ptr %k, align 4
+  br label %whilehead13
+
+whilemerge9:                                      ; preds = %whilehead7
+  %readtmp84 = load i32, ptr %i, align 4
+  %addtmp85 = add i32 %readtmp84, 1
+  store i32 %addtmp85, ptr %i, align 4
+  br label %whilehead
+
+whilehead13:                                      ; preds = %whilemerge58, %whilebody8
+  %readtmp16 = load i32, ptr %k, align 4
+  %lttmp17 = icmp ult i32 %readtmp16, 2
+  %docond18 = icmp ne i1 %lttmp17, false
+  br i1 %docond18, label %whilebody14, label %whilemerge15
+
+whilebody14:                                      ; preds = %whilehead13
+  %readtmp19 = load i32, ptr %i, align 4
+  %tmp_float = uitofp i32 %readtmp19 to float
+  %8 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 3
+  %9 = getelementptr inbounds %AABB, ptr %8, i32 0, i32 0
+  %10 = getelementptr inbounds %Interval, ptr %9, i32 0, i32 1
+  %readtmp20 = load float, ptr %10, align 4
+  %multmp = fmul float %tmp_float, %readtmp20
+  %readtmp21 = load i32, ptr %i, align 4
+  %subtmp = sub i32 1, %readtmp21
+  %tmp_float22 = uitofp i32 %subtmp to float
+  %11 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 3
+  %12 = getelementptr inbounds %AABB, ptr %11, i32 0, i32 0
+  %13 = getelementptr inbounds %Interval, ptr %12, i32 0, i32 0
+  %readtmp23 = load float, ptr %13, align 4
+  %multmp24 = fmul float %tmp_float22, %readtmp23
+  %addtmp = fadd float %multmp, %multmp24
+  %readtmp25 = load i32, ptr %j, align 4
+  %tmp_float26 = uitofp i32 %readtmp25 to float
+  %14 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 3
+  %15 = getelementptr inbounds %AABB, ptr %14, i32 0, i32 1
+  %16 = getelementptr inbounds %Interval, ptr %15, i32 0, i32 1
+  %readtmp27 = load float, ptr %16, align 4
+  %multmp28 = fmul float %tmp_float26, %readtmp27
+  %readtmp29 = load i32, ptr %j, align 4
+  %subtmp30 = sub i32 1, %readtmp29
+  %tmp_float31 = uitofp i32 %subtmp30 to float
+  %17 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 3
+  %18 = getelementptr inbounds %AABB, ptr %17, i32 0, i32 1
+  %19 = getelementptr inbounds %Interval, ptr %18, i32 0, i32 0
+  %readtmp32 = load float, ptr %19, align 4
+  %multmp33 = fmul float %tmp_float31, %readtmp32
+  %addtmp34 = fadd float %multmp28, %multmp33
+  %readtmp35 = load i32, ptr %k, align 4
+  %tmp_float36 = uitofp i32 %readtmp35 to float
+  %20 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 3
+  %21 = getelementptr inbounds %AABB, ptr %20, i32 0, i32 2
+  %22 = getelementptr inbounds %Interval, ptr %21, i32 0, i32 1
+  %readtmp37 = load float, ptr %22, align 4
+  %multmp38 = fmul float %tmp_float36, %readtmp37
+  %readtmp39 = load i32, ptr %k, align 4
+  %subtmp40 = sub i32 1, %readtmp39
+  %tmp_float41 = uitofp i32 %subtmp40 to float
+  %23 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 3
+  %24 = getelementptr inbounds %AABB, ptr %23, i32 0, i32 2
+  %25 = getelementptr inbounds %Interval, ptr %24, i32 0, i32 0
+  %readtmp42 = load float, ptr %25, align 4
+  %multmp43 = fmul float %tmp_float41, %readtmp42
+  %addtmp44 = fadd float %multmp38, %multmp43
+  %26 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 0
+  %readtmp45 = load float, ptr %26, align 4
+  %multmp46 = fmul float %readtmp45, %addtmp
+  %27 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 1
+  %readtmp47 = load float, ptr %27, align 4
+  %multmp48 = fmul float %readtmp47, %addtmp44
+  %addtmp49 = fadd float %multmp46, %multmp48
+  %28 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 1
+  %readtmp50 = load float, ptr %28, align 4
+  %multmp51 = fmul float %readtmp50, %addtmp
+  %29 = getelementptr inbounds %RotateY, ptr %result, i32 0, i32 0
+  %readtmp52 = load float, ptr %29, align 4
+  %multmp53 = fmul float %readtmp52, %addtmp44
+  %subtmp54 = fsub float %multmp53, %multmp51
+  %calltmp55 = call %Vec3 @new_0(float %addtmp49, float %addtmp34, float %subtmp54)
+  store i32 0, ptr %c, align 4
+  br label %whilehead56
+
+whilemerge15:                                     ; preds = %whilehead13
+  %readtmp82 = load i32, ptr %j, align 4
+  %addtmp83 = add i32 %readtmp82, 1
+  store i32 %addtmp83, ptr %j, align 4
+  br label %whilehead7
+
+whilehead56:                                      ; preds = %whilebody57, %whilebody14
+  %readtmp59 = load i32, ptr %c, align 4
+  %lttmp60 = icmp ult i32 %readtmp59, 3
+  %docond61 = icmp ne i1 %lttmp60, false
+  br i1 %docond61, label %whilebody57, label %whilemerge58
+
+whilebody57:                                      ; preds = %whilehead56
+  %readtmp62 = load i32, ptr %c, align 4
+  %readtmp63 = load %Vec3, ptr %min, align 4
+  %readtmp64 = load i32, ptr %c, align 4
+  %calltmp65 = call float @axis_0(%Vec3 %readtmp63, i32 %readtmp64)
+  %readtmp66 = load i32, ptr %c, align 4
+  %calltmp67 = call float @axis_0(%Vec3 %calltmp55, i32 %readtmp66)
+  %calltmp68 = call float @fminf(float %calltmp65, float %calltmp67)
+  %calltmp69 = call void @setAxis_0(ptr %min, i32 %readtmp62, float %calltmp68)
+  %readtmp70 = load i32, ptr %c, align 4
+  %readtmp71 = load %Vec3, ptr %max, align 4
+  %readtmp72 = load i32, ptr %c, align 4
+  %calltmp73 = call float @axis_0(%Vec3 %readtmp71, i32 %readtmp72)
+  %readtmp74 = load i32, ptr %c, align 4
+  %calltmp75 = call float @axis_0(%Vec3 %calltmp55, i32 %readtmp74)
+  %calltmp76 = call float @fmaxf(float %calltmp73, float %calltmp75)
+  %calltmp77 = call void @setAxis_0(ptr %max, i32 %readtmp70, float %calltmp76)
+  %readtmp78 = load i32, ptr %c, align 4
+  %addtmp79 = add i32 %readtmp78, 1
+  store i32 %addtmp79, ptr %c, align 4
+  br label %whilehead56
+
+whilemerge58:                                     ; preds = %whilehead56
+  %readtmp80 = load i32, ptr %k, align 4
+  %addtmp81 = add i32 %readtmp80, 1
+  store i32 %addtmp81, ptr %k, align 4
+  br label %whilehead13
+}
+
+declare float @sinf(float)
+
+declare float @cosf(float)
+
+define float @axis_0(%Vec3 %0, i32 %1) {
+entry:
+  %neqtmp = icmp eq i32 1, %1
+  %ifcond = icmp ne i1 %neqtmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %extracted = extractvalue %Vec3 %0, 1
+  ret float %extracted
+
+ifmerge:                                          ; preds = %entry
+  %neqtmp1 = icmp eq i32 2, %1
+  %ifcond2 = icmp ne i1 %neqtmp1, false
+  br i1 %ifcond2, label %ifbody3, label %ifmerge4
+
+ifbody3:                                          ; preds = %ifmerge
+  %extracted5 = extractvalue %Vec3 %0, 2
+  ret float %extracted5
+
+ifmerge4:                                         ; preds = %ifmerge
+  %extracted6 = extractvalue %Vec3 %0, 0
+  ret float %extracted6
+}
+
+define void @setAxis_0(ptr %0, i32 %1, float %2) {
+entry:
+  %neqtmp = icmp eq i32 0, %1
+  %ifcond = icmp ne i1 %neqtmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %3 = getelementptr inbounds %Vec3, ptr %0, i32 0, i32 0
+  store float %2, ptr %3, align 4
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %neqtmp1 = icmp eq i32 1, %1
+  %ifcond2 = icmp ne i1 %neqtmp1, false
+  br i1 %ifcond2, label %ifbody3, label %ifmerge4
+
+ifbody3:                                          ; preds = %ifmerge
+  %4 = getelementptr inbounds %Vec3, ptr %0, i32 0, i32 1
+  store float %2, ptr %4, align 4
+  br label %ifmerge4
+
+ifmerge4:                                         ; preds = %ifbody3, %ifmerge
+  %neqtmp5 = icmp eq i32 2, %1
+  %ifcond6 = icmp ne i1 %neqtmp5, false
+  br i1 %ifcond6, label %ifbody7, label %ifmerge8
+
+ifbody7:                                          ; preds = %ifmerge4
+  %5 = getelementptr inbounds %Vec3, ptr %0, i32 0, i32 2
+  store float %2, ptr %5, align 4
+  br label %ifmerge8
+
+ifmerge8:                                         ; preds = %ifbody7, %ifmerge4
+  ret void
+}
+
+define %Group @newL_0(%ArrayList.5 %0) {
+entry:
+  %result = alloca %Group, align 8
+  %1 = getelementptr inbounds %Group, ptr %result, i32 0, i32 0
+  store %ArrayList.5 %0, ptr %1, align 8
+  %idx = alloca i32, align 4
+  store i32 1, ptr %idx, align 4
+  %2 = getelementptr inbounds %Group, ptr %result, i32 0, i32 1
+  %3 = getelementptr inbounds %Group, ptr %result, i32 0, i32 0
+  %calltmp = call %Hittable @get_0.40(ptr %3, i32 0)
+  %calltmp1 = call %AABB @boundingBox_0.31(%Hittable %calltmp)
+  store %AABB %calltmp1, ptr %2, align 4
+  br label %whilehead
+
+whilehead:                                        ; preds = %whilebody, %entry
+  %readtmp = load i32, ptr %idx, align 4
+  %4 = getelementptr inbounds %Group, ptr %result, i32 0, i32 0
+  %5 = getelementptr inbounds %ArrayList, ptr %4, i32 0, i32 1
+  %readtmp2 = load i32, ptr %5, align 4
+  %lttmp = icmp ult i32 %readtmp, %readtmp2
+  %docond = icmp ne i1 %lttmp, false
+  br i1 %docond, label %whilebody, label %whilemerge
+
+whilebody:                                        ; preds = %whilehead
+  %6 = getelementptr inbounds %Group, ptr %result, i32 0, i32 1
+  %7 = getelementptr inbounds %Group, ptr %result, i32 0, i32 1
+  %readtmp3 = load %AABB, ptr %7, align 4
+  %8 = getelementptr inbounds %Group, ptr %result, i32 0, i32 0
+  %readtmp4 = load i32, ptr %idx, align 4
+  %calltmp5 = call %Hittable @get_0.42(ptr %8, i32 %readtmp4)
+  %calltmp6 = call %AABB @boundingBox_0.31(%Hittable %calltmp5)
+  %calltmp7 = call %AABB @combine_0(%AABB %readtmp3, %AABB %calltmp6)
+  store %AABB %calltmp7, ptr %6, align 4
+  %readtmp8 = load i32, ptr %idx, align 4
+  %addtmp = add i32 %readtmp8, 1
+  store i32 %addtmp, ptr %idx, align 4
+  br label %whilehead
+
+whilemerge:                                       ; preds = %whilehead
+  %readtmp9 = load %Group, ptr %result, align 8
+  ret %Group %readtmp9
+}
+
+define %Hittable @get_0.40(ptr %0, i32 %1) {
+entry:
+  %2 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 1
+  %readtmp = load i32, ptr %2, align 4
+  %subtmp = sub i32 %readtmp, 1
+  %gttmp = icmp ugt i32 %1, %subtmp
+  %ifcond = icmp ne i1 %gttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %3 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 1
+  %readtmp1 = load i32, ptr %3, align 4
+  %tmp_float = zext i32 %readtmp1 to i64
+  %calltmp = call void @printint(i64 %tmp_float)
+  %calltmp2 = call void @printstr(ptr @str.41)
+  %calltmp3 = call void @exit(i32 1)
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %4 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 2
+  %readtmp4 = load ptr, ptr %4, align 8
+  %tmp_int = ptrtoint ptr %readtmp4 to i64
+  %tmp_float5 = zext i32 %1 to i64
+  %multmp = mul i64 %tmp_float5, i32 ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %addtmp = add i64 %tmp_int, %multmp
+  %tmp_pointer = inttoptr i64 %addtmp to ptr
+  %readtmp6 = load %Hittable, ptr %tmp_pointer, align 8
+  ret %Hittable %readtmp6
+}
+
+define %Hittable @get_0.42(ptr %0, i32 %1) {
+entry:
+  %2 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 1
+  %readtmp = load i32, ptr %2, align 4
+  %subtmp = sub i32 %readtmp, 1
+  %gttmp = icmp ugt i32 %1, %subtmp
+  %ifcond = icmp ne i1 %gttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %3 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 1
+  %readtmp1 = load i32, ptr %3, align 4
+  %tmp_float = zext i32 %readtmp1 to i64
+  %calltmp = call void @printint(i64 %tmp_float)
+  %calltmp2 = call void @printstr(ptr @str.43)
+  %calltmp3 = call void @exit(i32 1)
+  br label %ifmerge
+
+ifmerge:                                          ; preds = %ifbody, %entry
+  %4 = getelementptr inbounds %ArrayList, ptr %0, i32 0, i32 2
+  %readtmp4 = load ptr, ptr %4, align 8
+  %tmp_int = ptrtoint ptr %readtmp4 to i64
+  %tmp_float5 = zext i32 %1 to i64
+  %multmp = mul i64 %tmp_float5, i32 ptrtoint (ptr getelementptr inbounds ([1 x %Hittable], ptr null, i32 1) to i32)
+  %addtmp = add i64 %tmp_int, %multmp
+  %tmp_pointer = inttoptr i64 %addtmp to ptr
+  %readtmp6 = load %Hittable, ptr %tmp_pointer, align 8
+  ret %Hittable %readtmp6
+}
+
+define %Vec3 @pixel_sample_square_0(%Vec3 %0, %Vec3 %1) {
+entry:
+  %calltmp = call double @random_double01()
+  %subtmp = fsub double %calltmp, 5.000000e-01
+  %tmp_trunc = fptrunc double %subtmp to float
+  %calltmp1 = call double @random_double01()
+  %subtmp2 = fsub double %calltmp1, 5.000000e-01
+  %tmp_trunc3 = fptrunc double %subtmp2 to float
+  %calltmp4 = call %Vec3 @mul_0(%Vec3 %0, float %tmp_trunc)
+  %calltmp5 = call %Vec3 @mul_0(%Vec3 %1, float %tmp_trunc3)
+  %calltmp6 = call %Vec3 @add_0(%Vec3 %calltmp4, %Vec3 %calltmp5)
+  ret %Vec3 %calltmp6
+}
+
+declare double @random_double01()
+
+define %Vec3 @defocus_disk_sample_0(%Vec3 %0, %Vec3 %1, %Vec3 %2) {
+entry:
+  %calltmp = call %Vec3 @random_in_unit_disk_0()
+  %extracted = extractvalue %Vec3 %calltmp, 0
+  %calltmp1 = call %Vec3 @mul_0(%Vec3 %1, float %extracted)
+  %extracted2 = extractvalue %Vec3 %calltmp, 1
+  %calltmp3 = call %Vec3 @mul_0(%Vec3 %2, float %extracted2)
+  %calltmp4 = call %Vec3 @add_0(%Vec3 %calltmp1, %Vec3 %calltmp3)
+  %calltmp5 = call %Vec3 @add_0(%Vec3 %0, %Vec3 %calltmp4)
+  ret %Vec3 %calltmp5
+}
+
+define %Vec3 @random_in_unit_disk_0() {
+entry:
+  %p = alloca %Vec3, align 8
+  br label %dobody
+
+dobody:                                           ; preds = %dobody, %entry
+  %calltmp = call double @random_double(double -1.000000e+00, double 1.000000e+00)
+  %tmp_trunc = fptrunc double %calltmp to float
+  %calltmp1 = call double @random_double(double -1.000000e+00, double 1.000000e+00)
+  %tmp_trunc2 = fptrunc double %calltmp1 to float
+  %calltmp3 = call %Vec3 @new_0(float %tmp_trunc, float %tmp_trunc2, float 0.000000e+00)
+  store %Vec3 %calltmp3, ptr %p, align 4
+  %readtmp = load %Vec3, ptr %p, align 4
+  %readtmp4 = load %Vec3, ptr %p, align 4
+  %calltmp5 = call float @dot_0(%Vec3 %readtmp, %Vec3 %readtmp4)
+  %lttmp = fcmp ule float %calltmp5, 1.000000e+00
+  %nottmp = xor i1 %lttmp, true
+  %docond = icmp ne i1 %nottmp, false
+  br i1 %docond, label %dobody, label %domerge
+
+domerge:                                          ; preds = %dobody
+  %readtmp6 = load %Vec3, ptr %p, align 4
+  ret %Vec3 %readtmp6
+}
+
+define %Ray @new_0.44(%Vec3 %0, %Vec3 %1, float %2) {
+entry:
+  %result = alloca %Ray, align 8
+  %3 = getelementptr inbounds %Ray, ptr %result, i32 0, i32 0
+  %4 = getelementptr inbounds %HRay, ptr %3, i32 0, i32 2
+  store float %2, ptr %4, align 4
+  %5 = getelementptr inbounds %Ray, ptr %result, i32 0, i32 0
+  %6 = getelementptr inbounds %HRay, ptr %5, i32 0, i32 1
+  store %Vec3 %1, ptr %6, align 4
+  %7 = getelementptr inbounds %Ray, ptr %result, i32 0, i32 0
+  %8 = getelementptr inbounds %HRay, ptr %7, i32 0, i32 0
+  store %Vec3 %0, ptr %8, align 4
+  %readtmp = load %Ray, ptr %result, align 4
+  ret %Ray %readtmp
+}
+
+define %Color @color_0(%Ray %0, %Hittable %1, %Color %2, i32 %3) {
+entry:
+  %neqtmp = icmp eq i32 0, %3
+  %ifcond = icmp ne i1 %neqtmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %calltmp = call %Color @new_0.1(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  ret %Color %calltmp
+
+ifmerge:                                          ; preds = %entry
+  %record = alloca %HitRecord, align 8
+  %calltmp1 = call %Vec3 @new_0(float 0.000000e+00, float 0.000000e+00, float 0.000000e+00)
+  %extracted = extractvalue %Ray %0, 0
+  %calltmp2 = call %Interval @new_0.13(float 0x3F50624DE0000000, float 0x7FF0000000000000)
+  %calltmp3 = call i1 @checkHit_0.37(%Hittable %1, %Vec3 %calltmp1, %HRay %extracted, %Interval %calltmp2, ptr %record)
+  %nottmp = xor i1 %calltmp3, true
+  %ifcond4 = icmp ne i1 %nottmp, false
+  br i1 %ifcond4, label %ifbody5, label %ifmerge6
+
+ifbody5:                                          ; preds = %ifmerge
+  ret %Color %2
+
+ifmerge6:                                         ; preds = %ifmerge
+  %scattered = alloca %Ray, align 8
+  %attenuation = alloca %Color, align 8
+  %emission = alloca %Color, align 8
+  %4 = getelementptr inbounds %HitRecord, ptr %record, i32 0, i32 6
+  %readtmp = load ptr, ptr %4, align 8
+  %readtmp7 = load %Material, ptr %readtmp, align 8
+  %5 = getelementptr inbounds %HitRecord, ptr %record, i32 0, i32 3
+  %readtmp8 = load float, ptr %5, align 4
+  %6 = getelementptr inbounds %HitRecord, ptr %record, i32 0, i32 4
+  %readtmp9 = load float, ptr %6, align 4
+  %7 = getelementptr inbounds %HitRecord, ptr %record, i32 0, i32 0
+  %readtmp10 = load %Vec3, ptr %7, align 4
+  %calltmp11 = call %Color @emit_0.45(%Material %readtmp7, float %readtmp8, float %readtmp9, %Vec3 %readtmp10)
+  store %Color %calltmp11, ptr %emission, align 4
+  %8 = getelementptr inbounds %HitRecord, ptr %record, i32 0, i32 6
+  %readtmp12 = load ptr, ptr %8, align 8
+  %readtmp13 = load %Material, ptr %readtmp12, align 8
+  %extracted14 = extractvalue %Ray %0, 0
+  %calltmp15 = call i1 @scatter_0.46(%Material %readtmp13, %HRay %extracted14, ptr %record, ptr %attenuation, ptr %scattered)
+  %nottmp16 = xor i1 %calltmp15, true
+  %ifcond17 = icmp ne i1 %nottmp16, false
+  br i1 %ifcond17, label %ifbody18, label %ifmerge19
+
+ifbody18:                                         ; preds = %ifmerge6
+  %readtmp20 = load %Color, ptr %emission, align 4
+  ret %Color %readtmp20
+
+ifmerge19:                                        ; preds = %ifmerge6
+  %readtmp21 = load %Ray, ptr %scattered, align 4
+  %subtmp = sub i32 %3, 1
+  %calltmp22 = call %Color @color_0(%Ray %readtmp21, %Hittable %1, %Color %2, i32 %subtmp)
+  %readtmp23 = load %Color, ptr %attenuation, align 4
+  %extracted24 = extractvalue %Color %readtmp23, 0
+  %calltmp25 = call float @dot_0(%Vec3 %extracted24, %Vec3 %extracted24)
+  %lttmp = fcmp ule float %calltmp25, 0x3F847AE140000000
+  %ifcond26 = icmp ne i1 %lttmp, false
+  br i1 %ifcond26, label %ifbody27, label %ifmerge28
+
+ifbody27:                                         ; preds = %ifmerge19
+  %readtmp29 = load %Color, ptr %emission, align 4
+  ret %Color %readtmp29
+
+ifmerge28:                                        ; preds = %ifmerge19
+  %9 = getelementptr inbounds %Color, ptr %attenuation, i32 0, i32 0
+  %readtmp30 = load %Vec3, ptr %9, align 4
+  %extracted31 = extractvalue %Color %calltmp22, 0
+  %calltmp32 = call %Vec3 @mulV_0(%Vec3 %readtmp30, %Vec3 %extracted31)
+  store %Vec3 %calltmp32, ptr %9, align 4
+  %10 = getelementptr inbounds %Color, ptr %attenuation, i32 0, i32 0
+  %readtmp33 = load %Vec3, ptr %10, align 4
+  %11 = getelementptr inbounds %Color, ptr %emission, i32 0, i32 0
+  %readtmp34 = load %Vec3, ptr %11, align 4
+  %calltmp35 = call %Vec3 @add_0(%Vec3 %readtmp33, %Vec3 %readtmp34)
+  store %Vec3 %calltmp35, ptr %10, align 4
+  %readtmp36 = load %Color, ptr %attenuation, align 4
+  ret %Color %readtmp36
+}
+
+define %Color @emit_0.45(%Material %0, float %1, float %2, %Vec3 %3) {
+entry:
+  %extracted = extractvalue %Material %0, 1
+  %extracted1 = extractvalue %Material %0, 0
+  %extracted2 = extractvalue %MaterialVTable %extracted1, 1
+  %calltmp = call %Color %extracted2(ptr %extracted, float %1, float %2, %Vec3 %3)
+  ret %Color %calltmp
+}
+
+define i1 @scatter_0.46(%Material %0, %HRay %1, ptr %2, ptr %3, ptr %4) {
+entry:
+  %extracted = extractvalue %Material %0, 1
+  %extracted1 = extractvalue %Material %0, 0
+  %extracted2 = extractvalue %MaterialVTable %extracted1, 0
+  %calltmp = call i1 %extracted2(ptr %extracted, %HRay %1, ptr %2, ptr %3, ptr %4)
+  ret i1 %calltmp
+}
+
+define %Vec3 @mulV_0(%Vec3 %0, %Vec3 %1) {
+entry:
+  %extracted = extractvalue %Vec3 %0, 0
+  %extracted1 = extractvalue %Vec3 %1, 0
+  %multmp = fmul float %extracted, %extracted1
+  %extracted2 = extractvalue %Vec3 %0, 1
+  %extracted3 = extractvalue %Vec3 %1, 1
+  %multmp4 = fmul float %extracted2, %extracted3
+  %extracted5 = extractvalue %Vec3 %0, 2
+  %extracted6 = extractvalue %Vec3 %1, 2
+  %multmp7 = fmul float %extracted5, %extracted6
+  %calltmp = call %Vec3 @new_0(float %multmp, float %multmp4, float %multmp7)
+  ret %Vec3 %calltmp
+}
+
+define void @write_0(%Color %0, float %1) {
+entry:
+  %calltmp = call %Interval @new_0.13(float 0.000000e+00, float 0x3FEFF7CEE0000000)
+  %extracted = extractvalue %Color %0, 0
+  %divtmp = fdiv float 1.000000e+00, %1
+  %calltmp1 = call %Vec3 @mul_0(%Vec3 %extracted, float %divtmp)
+  %extracted2 = extractvalue %Vec3 %calltmp1, 0
+  %calltmp3 = call float @linear_to_gamma_0(float %extracted2)
+  %calltmp4 = call float @clamp_0(%Interval %calltmp, float %calltmp3)
+  %multmp = fmul float %calltmp4, 2.560000e+02
+  %tmp_float = fptoui float %multmp to i64
+  %calltmp5 = call void @printint(i64 %tmp_float)
+  %calltmp6 = call void @printstr(ptr @str.47)
+  %extracted7 = extractvalue %Vec3 %calltmp1, 1
+  %calltmp8 = call float @linear_to_gamma_0(float %extracted7)
+  %calltmp9 = call float @clamp_0(%Interval %calltmp, float %calltmp8)
+  %multmp10 = fmul float %calltmp9, 2.560000e+02
+  %tmp_float11 = fptoui float %multmp10 to i64
+  %calltmp12 = call void @printint(i64 %tmp_float11)
+  %calltmp13 = call void @printstr(ptr @str.48)
+  %extracted14 = extractvalue %Vec3 %calltmp1, 2
+  %calltmp15 = call float @linear_to_gamma_0(float %extracted14)
+  %calltmp16 = call float @clamp_0(%Interval %calltmp, float %calltmp15)
+  %multmp17 = fmul float %calltmp16, 2.560000e+02
+  %tmp_float18 = fptoui float %multmp17 to i64
+  %calltmp19 = call void @printint(i64 %tmp_float18)
+  %calltmp20 = call void @printstr(ptr @str.49)
+  ret void
+}
+
+define float @linear_to_gamma_0(float %0) {
+entry:
+  %calltmp = call float @sqrtf(float %0)
+  ret float %calltmp
+}
+
+define float @clamp_0(%Interval %0, float %1) {
+entry:
+  %extracted = extractvalue %Interval %0, 0
+  %gttmp = fcmp uge float %extracted, %1
+  %ifcond = icmp ne i1 %gttmp, false
+  br i1 %ifcond, label %ifbody, label %ifmerge
+
+ifbody:                                           ; preds = %entry
+  %extracted1 = extractvalue %Interval %0, 0
+  ret float %extracted1
+
+ifmerge:                                          ; preds = %entry
+  %extracted2 = extractvalue %Interval %0, 1
+  %lttmp = fcmp ule float %extracted2, %1
+  %ifcond3 = icmp ne i1 %lttmp, false
+  br i1 %ifcond3, label %ifbody4, label %ifmerge5
+
+ifbody4:                                          ; preds = %ifmerge
+  %extracted6 = extractvalue %Interval %0, 1
+  ret float %extracted6
+
+ifmerge5:                                         ; preds = %ifmerge
+  ret float %1
+}
+
+declare void @log_pc(i32, i32)

@@ -1,0 +1,161 @@
+import "src/hittable.car"
+import "std/arraylist.car"
+
+extern proc random_int i32 i32 : i32
+extern proc log_info u8$* : void
+extern proc malloc i32 : void*
+
+def proc partition Hittable ArrayList* i32 i32 i32 : i32 {
+    => axis
+    => end
+    => start
+    => objects
+
+    f32 piviot
+    i32 i
+
+    piviot objects end Hittable ArrayList.get
+    Hittable.boundingBox axis AABB.axis.min =
+    
+    i start 1 - =
+            
+    Hittable tmp
+
+    i32 j
+    j start =
+
+    while { j@ end 1 - > ! } : {
+        objects j@ Hittable ArrayList.get
+        Hittable.boundingBox axis AABB.axis.min piviot < if {
+            i copy@ 1 += 
+
+            objects j@ Hittable ArrayList.getPtr => a
+            objects i@ Hittable ArrayList.getPtr => b
+
+            tmp a@ =
+            a b@ = 
+            b tmp@ =
+
+            # swap array j and i
+        }
+
+        j copy@ 1 +=
+    }
+            
+    objects i@ 1 + Hittable ArrayList.getPtr => a
+    objects end Hittable ArrayList.getPtr => b
+
+    tmp a@ =
+    a b@ = 
+    b tmp@ =
+
+    i@ 1 +
+}
+
+struct BHV {
+    def proc qsort Hittable ArrayList* i32 i32 i32 : void {
+        => axis
+        => end
+        => start
+        => objects
+
+        # i32 i
+        # i start =
+        # while { i@ end < } : {
+        #     result objects i@ Hittable ArrayList.get Hittable ArrayList.append
+
+        #     i copy@ 1 +=
+        # }
+
+        start end < if {
+            objects start end axis partition => pi
+
+            # pi i64' printint
+
+            objects start pi 1 - axis Self.qsort
+            # result objects pi Hittable ArrayList.get Hittable ArrayList.append
+            objects pi 1 + end axis Self.qsort
+        } 
+
+        # start end == if {    
+        #     result objects start Hittable ArrayList.get Hittable ArrayList.append
+        # }
+    }
+
+    Hittable left
+    Hittable right
+
+    AABB box
+
+    def proc new Hittable ArrayList* i32 i32 : Self {
+        => end
+        => start
+        => objects
+
+        Self result
+    
+        0 2 random_int => axis
+
+        end start - => object_span
+
+        object_span 1 == if {
+            result.left objects start Hittable ArrayList.get =
+            result.right objects start Hittable ArrayList.get =
+        }
+        
+        object_span 2 == if {
+            result.left objects start Hittable ArrayList.get =
+            result.right objects start 1 + Hittable ArrayList.get =
+        }
+        
+        object_span 2 > if {
+            objects start end 1 - axis qsort
+
+            BHV [2] .SIZE malloc BHV [2] *' => lr
+
+            start object_span 2 / i32' + => mid
+
+            lr [0] objects start mid Self.new =
+            lr [1] objects mid end Self.new =
+
+            result.left lr [0] 0.0 0.0 0.0 Vec3.new Hittable.new =
+            result.right lr [1] 0.0 0.0 0.0 Vec3.new Hittable.new =
+        }
+
+        result.box
+        result.left@ Hittable.boundingBox
+        result.right@ Hittable.boundingBox
+        AABB.combine =
+
+        result@
+    }
+
+    def proc boundingBox Self* : AABB {
+        @.box
+    }
+
+    def proc checkHit Self* HRay Vec3 Interval HitRecord* : bool {
+        Interval time
+
+        => record
+        copy time swap = disc
+        => center
+        => ray
+        @=> self
+
+        self.box ray time@ AABB.hit ! if {
+            # "escaped" log_info
+            false ret
+        }
+
+        self.left center ray time@ record Hittable.checkHit => hit_left
+
+        hit_left if {
+            time time@.min record.t@ Interval.new =
+        }
+
+        self.right center ray time@ record Hittable.checkHit => hit_right
+
+        hit_left hit_right ||
+    }
+}

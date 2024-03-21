@@ -1,0 +1,73 @@
+import "src/color.car"
+import "src/vec3.car"
+import "src/hittable.car"
+import "src/interval.car"
+import "src/hitrecord.car"
+import "src/material.car"
+
+extern proc sqrtf f32 : f32
+extern proc printfloat f32 : void
+
+struct Ray {
+    HRay data
+
+    def proc new Vec3 Vec3 f32 : Self {
+        Self result 
+
+        result.data.time swap =
+        result.data.dir swap =
+        result.data.orig swap =
+
+        result@
+    }
+
+    def proc hit_sphere Self Vec3 f32 : f32 {
+        => radius
+        => center
+        => self
+
+        discriminant 0.0 < if {
+            0.0 f32' 1.0 - ret
+        }
+
+        0.0 half_b - discriminant sqrtf - a /
+    }
+
+    def proc color Self Hittable Color i32 : Color {
+        => i
+        => bg
+        => world
+        => self
+
+        i 0 == if {
+            0.0 0.0 0.0 Color.new ret
+        }
+
+        HitRecord record
+
+        world 0.0 0.0 0.0 Vec3.new self.data 0.001 infinity Interval.new record Hittable.checkHit ! if {
+            bg ret
+        }
+
+        Ray scattered
+        Color attenuation
+        Color emission
+
+        emission record.mat@ Material*'@ record.u@ record.v@ record.p@ Material.emit =
+
+        record.mat@ Material*'@ self.data record attenuation scattered HRay*' Material.scatter ! if {
+            emission@ ret 
+        }
+
+        scattered@ world bg i 1 - Ray.color => tmp_c
+
+        attenuation@.data copy Vec3.dot 0.01 < if {
+            emission@ ret
+        }
+
+        attenuation.data copy@ tmp_c.data Vec3.mulV =
+
+        attenuation.data copy@ emission.data@ Vec3.add =
+        attenuation@
+    }
+}

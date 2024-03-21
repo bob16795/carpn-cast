@@ -1,0 +1,54 @@
+def proc create_box Vec3 Vec3 Material* : Hittable {
+    => mat
+    => b
+    => a
+
+    Group.SIZE malloc Group*' => sides
+    sides Group.new =
+
+    a.x b.x fminf
+    a.y b.y fminf
+    a.z b.z fminf Vec3.new => min
+    a.x b.x fmaxf
+    a.y b.y fmaxf
+    a.z b.z fmaxf Vec3.new => max
+
+    max.x min.x - 0.0 0.0 Vec3.new => dx
+    0.0 max.y min.y - 0.0 Vec3.new => dy
+    0.0 0.0 max.z min.z - Vec3.new => dz
+
+    Quad [6] .SIZE malloc Quad [6] *' => quads
+    quads [0]
+        min.x min.y max.z Vec3.new
+        dx dy mat
+    Quad.new =
+    quads [1]
+        max.x min.y max.z Vec3.new
+        dz Vec3.neg dy mat
+    Quad.new =
+    quads [2]
+        max.x min.y min.z Vec3.new
+        dx Vec3.neg dy mat
+    Quad.new =
+    quads [3]
+        min.x min.y min.z Vec3.new
+        dz dy mat
+    Quad.new =
+    quads [4]
+        min.x max.y max.z Vec3.new
+        dx dz Vec3.neg mat
+    Quad.new =
+    quads [4]
+        min.x min.y min.z Vec3.new
+        dx dz mat
+    Quad.new =
+
+    sides quads [0] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
+    sides quads [1] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
+    sides quads [2] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
+    sides quads [3] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
+    sides quads [4] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
+    sides quads [5] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
+
+    sides 0.0 0.0 0.0 Vec3.new Hittable.new
+}

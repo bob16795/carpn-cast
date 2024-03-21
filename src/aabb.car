@@ -1,0 +1,160 @@
+import "src/interval.car"
+import "src/hitrecord.car"
+
+extern proc fminf f32 f32 : f32
+extern proc fmaxf f32 f32 : f32
+
+const delta 0.0001
+
+struct AABB {
+    Interval x
+    Interval y
+    Interval z
+
+    def proc default : Self {
+        Self result
+        
+        result.x Interval.default =
+        result.y Interval.default =
+        result.z Interval.default =
+
+        result@
+    }
+    
+    def proc new Interval Interval Interval : Self {
+        Self result
+
+        result.z swap =
+        result.y swap =
+        result.x swap =
+
+        result@
+    }
+
+    def proc newV Vec3 Vec3 : Self {
+        => max
+        => min
+
+        Self result
+
+        result.x min.x max.x Interval.new =
+        result.y min.y max.y Interval.new =
+        result.z min.z max.z Interval.new =
+
+        result@
+    }
+    
+    def proc offset Self Vec3 : Self {
+        => o
+        => a
+
+        Self result
+
+        result.x a.x o.x Interval.offset =
+        result.y a.y o.y Interval.offset =
+        result.z a.z o.z Interval.offset =
+
+        result@
+    }
+    
+    def proc combine Self Self : Self {
+        => a
+        => b
+
+        Self result
+
+        result.x a.x b.x Interval.combine =
+        result.y a.y b.y Interval.combine =
+        result.z a.z b.z Interval.combine =
+
+        result@
+    }
+
+    def proc axis Self i32 : Interval {
+        => x
+        => self
+
+        x 1 == if { self.y ret }
+        x 2 == if { self.z ret }
+        self.x
+    }
+
+    def proc hit Self HRay Interval : bool {
+        # TODO: redo
+
+        Interval time
+
+        copy time swap = disc
+        => ray
+        => self
+
+        i32 i
+        i 0 =
+
+        while { i@ 3 < } : {
+            1.0 ray.dir i@ Vec3.axis / => invD
+            ray.orig i@ Vec3.axis => orig 
+
+            f32 t0
+            f32 t1
+
+            t0 self i@ Self.axis .min orig - invD * =
+            t1 self i@ Self.axis .max orig - invD * =
+
+            invD 0.0 < if {
+                t0@ => tmp
+                t0 t1@ =
+                t1 tmp =
+            } 
+
+            t0@ time.min@ > if {
+                time.min t0@ =
+            }
+            
+            t1@ time.max@ < if {
+                time.max t1@ =
+            }
+
+            time.max@ time.min@ > ! if {
+                false ret
+            }
+
+            # self i@ Self.axis .min ray.orig i@ Vec3.axis - ray.dir i@ Vec3.axis / 
+            # self i@ Self.axis .max ray.orig i@ Vec3.axis - ray.dir i@ Vec3.axis /
+            # fminf => t0
+            # self i@ Self.axis .min ray.orig i@ Vec3.axis - ray.dir i@ Vec3.axis / 
+            # self i@ Self.axis .max ray.orig i@ Vec3.axis - ray.dir i@ Vec3.axis / 
+            # fmaxf => t1
+
+            # time.min t0 time.min@ fmaxf =
+            # time.max t1 time.max@ fminf =
+
+            # time.max@ time.min@ < if {
+            #     false ret
+            # }
+
+            i copy@ 1 +=
+        }
+
+        true 
+    }
+
+    def proc pad Self : Self {
+        => self
+
+        Self result        
+        result self =
+
+        self.x Interval.size delta < if {
+            result.x self.x delta Interval.expand =
+        }
+        self.y Interval.size delta < if {
+            result.y self.y delta Interval.expand =
+        }
+        self.z Interval.size delta < if {
+            result.z self.z delta Interval.expand =
+        }
+
+        result@
+    }
+}

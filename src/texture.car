@@ -1,0 +1,37 @@
+import "src/vec3.car"
+import "src/color.car"
+
+fntype proc ValueFn void* f32 f32 Vec3* : Color
+extern proc sqrtf f32 : f32
+
+
+struct TextureVTable {
+    ValueFn valueFn
+}
+
+struct Texture {
+    TextureVTable vtable
+
+    void* self
+
+    def proc new anytype* : Self {
+        Self result
+
+        => targ
+        targ@.TYPE => T
+
+        result.vtable.valueFn (T.value) =
+        result.self targ void*' =
+
+        result@
+    }
+
+    def proc value Self f32 f32 Vec3* : Color {
+        => p
+        => v
+        => u
+        => self
+
+        self.self u v p self.vtable.valueFn ()
+    }
+}

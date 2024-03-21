@@ -1,0 +1,6 @@
+import "std/arraylist.car"
+
+struct String {
+    u8 ArrayList base
+
+}

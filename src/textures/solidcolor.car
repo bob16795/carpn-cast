@@ -1,0 +1,18 @@
+import "src/texture.car"
+
+struct SolidColor {
+    Color color_value
+
+    def proc new Color : Self {
+        Self result
+
+        result.color_value swap =
+
+        result@
+    }
+
+    def proc value Self* f32 f32 Vec3* : Color {
+        disc disc disc
+        .color_value@
+    }
+}

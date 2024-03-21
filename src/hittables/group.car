@@ -1,0 +1,85 @@
+import "src/vec3.car"
+import "src/material.car"
+import "src/hittable.car"
+
+struct Group {
+    Hittable ArrayList objs
+    AABB box
+
+    def proc new : Self {
+        Self result
+
+        result.objs Hittable ArrayList.init =
+
+        result@
+    }
+
+    def proc newL Hittable ArrayList : Self {
+        Self result
+
+        result.objs swap =
+
+        i32 idx
+        idx 1 =
+            
+        result.box result.objs 0 Hittable ArrayList.get Hittable.boundingBox =
+
+        while { idx@ result.objs.len@ < } : {
+            result.box
+            result.box@
+            result.objs idx@ Hittable ArrayList.get
+            Hittable.boundingBox
+            AABB.combine
+            =
+
+            idx copy@ 1 +=
+        }
+
+
+        result@
+    }
+
+    def proc boundingBox Self* : AABB {
+        @.box
+    }
+
+    def proc add Self* Hittable : void {
+        => hittable
+        => self
+    
+        self.objs hittable Hittable ArrayList.append
+
+        self.box copy@ hittable Hittable.boundingBox AABB.combine =
+    }
+    
+    def proc checkHit Self* HRay Vec3 Interval HitRecord* : bool {
+        => record
+        => time
+        => center
+        => ray
+        => self
+            
+        HitRecord tmpRecord
+
+        bool hit
+        f32 closest
+        i32 idx
+
+        hit false =
+        closest time.max =
+        idx 0 =
+
+        while { idx@ self.objs.len@ < } : {
+            self.objs idx@ Hittable ArrayList.get
+            center ray time.min closest@ Interval.new tmpRecord Hittable.checkHit if {
+                hit true =
+                closest tmpRecord.t@ =
+                record tmpRecord@ =
+            }
+
+            idx copy@ 1 +=
+        }
+
+        hit@
+    }
+}

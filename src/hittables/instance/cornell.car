@@ -1,0 +1,97 @@
+import "src/hittables/instance/box.car"
+import "src/hittables/transforms/rotatey.car"
+
+def proc cornell_box Hittable ArrayList* : void {
+    => output
+
+    SolidColor [4] .SIZE malloc SolidColor [4] *' => colors
+    colors [0] 0.65 0.05 0.05 Color.new SolidColor.new =
+    colors [1] 0.73 0.73 0.73 Color.new SolidColor.new =
+    colors [2] 0.12 0.45 0.15 Color.new SolidColor.new =
+    colors [3] 15.0 15.0 15.0 Color.new SolidColor.new =
+
+    Lambertian.SIZE malloc Lambertian*' => red 
+    Lambertian.SIZE malloc Lambertian*' => white
+    Lambertian.SIZE malloc Lambertian*' => green 
+    DiffuseLight.SIZE malloc DiffuseLight*' => light 
+
+    red colors [0] Texture.new Lambertian.new =
+    white colors [1] Texture.new Lambertian.new =
+    green colors [2] Texture.new Lambertian.new =
+    light colors [3] Texture.new DiffuseLight.new =
+
+    Material [4] .SIZE malloc Material [4] *' => mats
+    mats [0] green Material.new =
+    mats [1] red Material.new =
+    mats [2] white Material.new =
+    mats [3] light Material.new =
+
+    Quad [6] .SIZE malloc Quad [6] *' => quads
+    quads [0]
+        555.0 000.0 000.0 Vec3.new
+        000.0 555.0 000.0 Vec3.new
+        000.0 000.0 555.0 Vec3.new
+        mats [0]
+    Quad.new =
+    quads [1]
+        000.0 000.0 000.0 Vec3.new
+        000.0 555.0 000.0 Vec3.new
+        000.0 000.0 555.0 Vec3.new
+        mats [1]
+    Quad.new =
+    quads [2]
+        343.0 554.0 332.0 Vec3.new
+        0.0 130.0 f32'- 000.0 000.0 Vec3.new
+        000.0 000.0 0.0 105.0 f32'- Vec3.new
+        mats [3]
+    Quad.new =
+    quads [3]
+        000.0 000.0 000.0 Vec3.new
+        555.0 000.0 000.0 Vec3.new
+        000.0 000.0 555.0 Vec3.new
+        mats [2]
+    Quad.new =
+    quads [4]
+        555.0 555.0 555.0 Vec3.new
+        0.0 555.0 f32'- 000.0 000.0 Vec3.new
+        000.0 000.0 0.0 555.0 f32'- Vec3.new
+        mats [2]
+    Quad.new =
+    quads [5]
+        000.0 000.0 555.0 Vec3.new
+        555.0 000.0 000.0 Vec3.new
+        000.0 555.0 000.0 Vec3.new
+        mats [2]
+    Quad.new =
+
+    output quads [0] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
+    output quads [1] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
+    output quads [2] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
+    output quads [3] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
+    output quads [4] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
+    output quads [5] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
+    
+    RotateY [2] .SIZE malloc RotateY [2] *' => rot
+
+    rot [0] 
+        000.0 000.0 000.0 Vec3.new
+        165.0 330.0 165.0 Vec3.new
+        mats [2]
+        create_box
+        15.0 0.0174533 f32' *
+    RotateY.new =
+    rot [1]
+        000.0 000.0 000.0 Vec3.new
+        165.0 165.0 165.0 Vec3.new
+        mats [2]
+        create_box
+        0.0 18.0 f32' - 0.0174533 f32' *
+    RotateY.new =
+
+    # output
+    # rot [0] 265.0 000.0 295.0 Vec3.new Hittable.new
+    # Hittable ArrayList.append
+    # output
+    # rot [1] 130.0 000.0 065.0 Vec3.new Hittable.new
+    # Hittable ArrayList.append
+}

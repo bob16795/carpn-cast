@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../carpn-new"
+		},
+		{
+			"path": "../../carpn-vscode"
+		}
+	],
+	"settings": {}
+}

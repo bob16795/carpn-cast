@@ -1,0 +1,51 @@
+import "src/materials/lambertian.car"
+import "src/materials/metal.car"
+import "src/materials/dielectric.car"
+import "src/materials/difflight.car"
+
+fntype proc EmitFn void* f32 f32 Vec3 : Color
+fntype proc ScatterFn void* HRay HitRecord* Color* HRay* : bool
+extern proc sqrtf f32 : f32
+
+struct MaterialVTable {
+    ScatterFn scatterFn 
+    EmitFn emitFn
+}
+
+struct Material {
+    MaterialVTable vtable
+
+    void* self
+
+    def proc new anytype* : Self {
+        Self result
+
+        => targ
+        targ@.TYPE => T
+
+        result.vtable.scatterFn (T.scatter) =
+        result.vtable.emitFn (T.emit) =
+        result.self targ void*' =
+
+        result@
+    }
+
+    def proc scatter Self HRay HitRecord* Color* HRay* : bool {
+        => scattered
+        => atten
+        => record
+        => in
+        => self
+
+        self.self in record atten scattered self.vtable.scatterFn ()
+    }
+
+    def proc emit Self f32 f32 Vec3 : Color {
+        => p
+        => v
+        => u
+        => self
+
+        self.self u v p self.vtable.emitFn ()
+    } 
+}

@@ -1,0 +1,79 @@
+import "std/mem.car"
+
+extern proc exit i32 : void
+
+macro ArrayList T {
+  u32 capacity
+  u32 len
+  T$* data
+
+  def proc init : Self {
+    Self result
+
+    result.len 0 =
+    result.capacity 0 =
+    result.data null T$*' =
+
+    result@
+  }
+
+  def proc extend Self* : void {
+    => self
+
+    self.capacity self.capacity@ 2 * =
+
+    self.capacity@ 0 == if {
+      self.capacity 1 =
+    }
+
+    self.data self.data@ self.capacity@ T.SIZE * realloc =
+  }
+
+  def proc get Self* i32 : T {
+    => i
+    => self
+
+    i self.len@ 1 - > if {
+      self.len@ i64' printint
+      "lol" printstr
+      1 exit
+    } 
+
+    self.data@ i64' i i64' T.SIZE * i64' + T*'@
+  }
+  
+  def proc getPtr Self* i32 : T* {
+    => i
+    => self
+
+    i self.len@ 1 - > if {
+      self.len@ i64' printint
+      "lolp" printstr
+      1 exit
+    } 
+
+
+    self.data@ i64' i i64' T.SIZE * i64' + T*'
+  }
+
+  def proc append Self* T : void {
+    => appends
+    => self
+
+    self.capacity@ self.len@ 1 + < if {
+      self Self.extend
+    }
+
+    self.data@ i64' self.len@ T.SIZE * i64' + T*' appends =
+
+    self.len copy@ 1 + =
+  }
+  
+  def proc pop Self* : T {
+    => self
+
+    self.len copy@ 1 - =
+
+    self.data@ i64' self.len@ T.SIZE * i64' + T*'@
+  }
+}

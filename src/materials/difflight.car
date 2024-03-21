@@ -1,0 +1,29 @@
+import "src/hitrecord.car"
+
+struct DiffuseLight {
+    Texture emission
+
+    def proc new Texture : Self {
+        Self result
+
+        result.emission swap =
+
+        result@
+    }
+
+    def proc emit Self* f32 f32 Vec3 : Color {
+        Vec3 p
+
+        p swap =
+        copy => v disc
+        => u
+        => self
+
+        self.emission@ u v p Texture.value 
+    }
+
+    def proc scatter Self* HRay HitRecord* Color* HRay* : bool {
+        disc disc disc disc disc
+        false
+    }
+}

@@ -1,0 +1,89 @@
+import "src/vec3.car"
+import "src/material.car"
+import "src/hittable.car"
+
+extern proc acosf f32 : f32
+extern proc atan2f f32 f32 : f32
+
+struct Sphere {
+    f32 radius
+    Material* mat
+    AABB box
+
+    def proc new f32 Material* : Self {
+        Self result
+
+        result.mat swap =
+        result.radius swap =
+
+        result.box 
+        0.0 0.0 0.0 Vec3.new
+        result.radius@
+        result.radius@
+        result.radius@
+        Vec3.new Vec3.sub
+        result.radius@
+        result.radius@
+        result.radius@
+        Vec3.new
+        AABB.newV =
+
+        result@
+    }
+
+    def proc boundingBox Self* : AABB {
+        @.box
+    }
+
+    def proc getUV Vec3 f32* f32* : void {
+        => v
+        => u
+        => p
+
+        0.0 p.y - acosf => theta
+        0.0 p.z - p.x atan2f 3.14159 + => phi
+
+        u phi 3.14159 2.0 f32' * / =
+        v theta 3.14159 / =
+    }
+
+    def proc checkHit Self* HRay Vec3 Interval HitRecord* : bool {
+        => record
+        => time
+        => center
+        => ray
+        @=> self
+
+        ray.orig center Vec3.sub => oc
+        ray.dir ray.dir Vec3.dot => a
+        oc ray.dir Vec3.dot => half_b
+        oc oc Vec3.dot self.radius self.radius * - => c
+        half_b half_b * a c * - => discriminant
+
+        discriminant 0.0 < if {
+            false ret
+        }
+
+        discriminant sqrtf => sqrtd
+
+        f32 root
+        root 0.0 half_b - sqrtd - a / =
+        time root@ Interval.surrounds !
+        if {
+            root 0.0 half_b - sqrtd + a / =
+            time root@ Interval.surrounds !
+            if {
+                false ret
+            }
+        }
+
+        record.t root@ =
+        record.p ray.orig ray.dir record.t@ Vec3.mul Vec3.add =
+        record.p@ center Vec3.sub self.radius Vec3.div => outward_normal
+        record ray.dir outward_normal HitRecord.set_face_normal
+        outward_normal record.u record.v Self.getUV
+        record.mat self.mat = 
+
+        true
+    }
+}

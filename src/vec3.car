@@ -1,0 +1,214 @@
+extern proc sqrtf f32 : f32
+extern proc fabsf f32 : f32
+extern proc fminf f32 f32 : f32
+
+extern proc random_double01 : f64
+extern proc random_double f64 f64 : f64
+
+struct Vec3 {
+    f32 x
+    f32 y
+    f32 z
+    
+    def proc new f32 f32 f32 : Self {
+        Self result
+
+        result.z swap =
+        result.y swap =
+        result.x swap =
+
+        result@
+    }
+    
+    def proc add Self Self : Self {
+        => b
+        => a
+
+        a.x b.x +
+        a.y b.y +
+        a.z b.z + Vec3.new
+    }
+
+    def proc sub Self Self : Self {
+        => b
+        => a
+
+        a.x b.x -
+        a.y b.y -
+        a.z b.z - Vec3.new
+    }
+
+    def proc neg Self : Self {
+        => a
+
+        0.0 a.x -
+        0.0 a.y -
+        0.0 a.z - Vec3.new
+    }
+    
+    def proc mul Self f32 : Self {
+        => b
+        => a
+
+        a.x b * 
+        a.y b * 
+        a.z b * Vec3.new
+    }
+    
+    def proc mulV Self Self : Self {
+        => b
+        => a
+
+        a.x b.x * 
+        a.y b.y * 
+        a.z b.z * Vec3.new
+    }
+
+    def proc div Self f32 : Self {
+        => b
+        => a
+
+        a.x b /
+        a.y b /
+        a.z b / Vec3.new
+    }
+    
+    def proc normal Self : Self {
+        => a
+
+        a copy Vec3.mag Vec3.div
+    }
+    
+    def proc dot Self Self : f32 {
+        => b
+        => a
+
+        a.x b.x *
+        a.y b.y * +
+        a.z b.z * +
+    }
+    
+    def proc mag Self : f32 {
+        => a
+
+        a a Vec3.dot
+        sqrtf
+    }
+    
+    def proc setAxis Self* i32 f32 : void {
+        => val
+        => x
+        => self
+
+        x 0 == if { self.x val = }
+        x 1 == if { self.y val = }
+        x 2 == if { self.z val = }
+    }
+
+    def proc axis Self i32 : f32 {
+        => x
+        => self
+
+        x 1 == if { self.y ret }
+        x 2 == if { self.z ret }
+        self.x
+    }
+
+    def proc random01 : Self {
+        random_double01 f32'
+        random_double01 f32'
+        random_double01 f32'
+        Vec3.new
+    }
+
+    def proc random f32 f32 : Self {
+        f64' => max
+        f64' => min
+
+        min max random_double f32'
+        min max random_double f32'
+        min max random_double f32'
+        Vec3.new
+    }
+
+    def proc random_in_unit_sphere : Self {
+        Vec3 result
+
+        do {
+            result 0.0 1.0 f32' - 1.0 Self.random =
+
+            result@ result@ Vec3.dot 1.0 <
+        }
+
+        result@
+    }
+
+    def proc random_unit_vector : Self {
+        random_in_unit_sphere Vec3.normal
+    }
+
+    def proc random_on_hemisphere Vec3 : Self {
+        => normal
+
+        random_unit_vector => on_unit_sphere
+
+        on_unit_sphere normal Vec3.dot 0.0 > if {
+            on_unit_sphere ret
+        }
+
+        0.0 0.0 0.0 Vec3.new on_unit_sphere Vec3.sub
+    }
+
+    def proc near_zero Vec3 : bool {
+        => self
+
+        0.00001 => s        
+        self.x fabsf s <
+        self.y fabsf s < &&
+        self.z fabsf s < &&
+    }
+
+    def proc reflect Vec3 Vec3 : Vec3 {
+        => normal
+        => self
+
+        self normal self normal Vec3.dot 2.0 * Vec3.mul Vec3.sub
+    } 
+
+    def proc refract Vec3 Vec3 f32 : Vec3 {
+        => etai_over_etat
+        => n
+        => uv
+
+        uv 0.0 1.0 f32' - Vec3.mul n Vec3.dot 1.0 fminf => cos_theta 
+        uv n cos_theta Vec3.mul Vec3.add etai_over_etat Vec3.mul => r_out_perp
+        n 0.0 1.0 r_out_perp r_out_perp Vec3.dot - fabsf sqrtf - Vec3.mul => r_out_parallel
+
+        r_out_perp r_out_parallel Vec3.add
+    }
+
+    def proc cross Vec3 Vec3 : Vec3 {
+        => b
+        => a
+
+        b.y a.z * b.z a.y * -
+        b.z a.x * b.x a.z * -
+        b.x a.y * b.y a.x * - Vec3.new
+    }
+
+    def proc random_in_unit_disk : Vec3 {
+        Vec3 p
+
+        do {
+            p
+            0.0 1.0 f32' - f64' 1.0 f64' random_double f32' 
+            0.0 1.0 f32' - f64' 1.0 f64' random_double f32' 
+            0.0 Vec3.new 
+            =
+
+            p@ p@ Vec3.dot 1.0 < !
+        }
+
+        p@
+    }
+}

@@ -1,0 +1,62 @@
+import "src/color.car"
+
+extern proc stbi_load u8$* i32* i32* i32* i32 : u8$*
+
+const BPP 3
+
+def proc clamp i32 i32 i32 : i32 {
+    => max
+    => min
+    => x
+
+    x max > if {
+        max ret
+    }
+
+    x min < if {
+        min ret
+    }
+
+    x
+}
+
+struct Image {
+    u8$* data
+    i32 width
+    i32 height
+    i32 scanline
+
+    def proc load u8$* : Self {
+        => name
+
+        Self result
+        i32 n
+
+        n BPP =
+
+        result.data name result.width result.height n BPP stbi_load =
+        result.scanline result.width@ BPP * =
+
+        result@
+    }
+
+    def proc pixel_data Self i32 i32 : Color {
+        => yt
+        => xt
+        => self 
+
+        self.data null u8$*' == if {
+            1.0 0.0 1.0 Color.new ret
+        }
+
+        xt 0 self.width clamp => x
+        yt 0 self.height clamp => y
+
+        self.data i64' x BPP * y self.scanline * + i64' + => a
+
+        a 0 + u8*'@ f32' 255.0 /
+        a 1 + u8*'@ f32' 255.0 /
+        a 2 + u8*'@ f32' 255.0 /
+        Color.new
+    }
+}

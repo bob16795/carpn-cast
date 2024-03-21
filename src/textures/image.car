@@ -1,0 +1,29 @@
+import "src/image.car"
+
+struct ImageTexture {
+    Image image
+
+    def proc new Image : Self {
+        Self result
+
+        result.image swap =
+
+        result@
+    }
+
+    def proc value Self* f32 f32 Vec3* : Color {
+        => p
+        => v
+        => u
+        => self
+
+        self.image.height@ 0 == if {
+            0.0 0.0 0.0 Color.new ret
+        }
+
+        u self.image.width@ f32' * i32' => i
+        1.0 v - self.image.height@ f32' * i32' => j
+
+        self.image@ i j Image.pixel_data
+    }
+}

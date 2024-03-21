@@ -1,0 +1,106 @@
+import "src/hittable.car"
+
+struct Quad {
+    Vec3 q
+    Vec3 u
+    Vec3 v
+    Vec3 w
+    
+    Material* mat
+
+    Vec3 normal
+    f32 d
+
+    AABB box
+
+    def proc new Vec3 Vec3 Vec3 Material* : Self {
+        Self result
+
+        result.mat swap =
+        result.v swap =
+        result.u swap =
+        result.q swap =
+
+        result.u@
+        result.v@
+        Vec3.cross => n
+        
+        result.normal n Vec3.normal =
+
+        result.d
+        result.normal@
+        result.q@
+        Vec3.dot =
+
+        result.w
+        n n n Vec3.dot Vec3.div =
+
+        result.box
+        result.q@
+        result.q@
+        result.u@ Vec3.add
+        result.v@ Vec3.add
+        AABB.newV
+        AABB.pad
+        =
+
+        result@
+    }
+
+    def proc boundingBox Self* : AABB {
+        @.box
+    }
+
+    def proc is_interior f32 f32 HitRecord* : bool {
+        => record
+        => b
+        => a
+
+        a 0.0 < 
+        a 1.0 > ||
+        b 0.0 < ||
+        b 1.0 > || if {
+            false ret
+        }
+
+        record.u a =
+        record.v b =
+
+        true
+    }
+
+    def proc checkHit Self* HRay Vec3 Interval HitRecord* : bool {
+        => record
+        => time
+        => center
+        => ray
+        => self
+
+        self.normal@ ray.dir Vec3.dot => denom
+
+        denom fabsf 0.0001 < if {
+            false ret
+        }
+
+        self.d@ self.normal@ ray.orig Vec3.dot - denom / => t
+        time t Interval.contains ! if {
+            false ret
+        }
+
+        ray.orig ray.dir t Vec3.mul Vec3.add => inter
+        inter self.q@ Vec3.sub => planar_hitpt_vector
+        self.w@ planar_hitpt_vector self.v@ Vec3.cross Vec3.dot => alpha
+        self.w@ self.u@ planar_hitpt_vector Vec3.cross Vec3.dot => beta
+
+        alpha beta record is_interior ! if {
+            false ret
+        }
+
+        record.t t =
+        record.p inter =
+        record.mat self.mat@ =
+        record ray.dir self.normal@ HitRecord.set_face_normal
+
+        true
+    }
+} 

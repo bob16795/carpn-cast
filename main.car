@@ -1,0 +1,292 @@
+import "src/color.car"
+import "src/vec3.car"
+import "std/arraylist.car"
+import "src/ray.car"
+import "src/hittable.car"
+import "src/material.car"
+import "src/hittables/sphere.car"
+import "src/hittables/group.car"
+import "src/hittables/quad.car"
+import "src/hittables/bhv.car"
+import "src/textures/solidcolor.car"
+import "src/textures/checker.car"
+import "src/textures/image.car"
+import "src/hittables/instance/cornell.car"
+
+const WIDTH 1000 
+const SAMPLES 1000
+const MAX_DEPTH 50
+const VFOV 40.0
+
+extern proc random_double01 : f64
+extern proc random_double : f64
+extern proc tanf f32 : f32
+extern proc log_pc i32 i32 : void
+
+def proc degrees_to_radians f32 : f32 {
+    0.01745 *
+}
+
+def proc pixel_sample_square Vec3 Vec3 : Vec3 {
+    => pixel_delta_v
+    => pixel_delta_u
+
+    random_double01 0.5 - f32' => px
+    random_double01 0.5 - f32' => py
+
+    pixel_delta_u px Vec3.mul
+    pixel_delta_v py Vec3.mul Vec3.add
+}
+
+def proc defocus_disk_sample Vec3 Vec3 Vec3 : Vec3 {
+    => v
+    => u 
+    => center
+
+    Vec3.random_in_unit_disk => p
+
+    center u p.x Vec3.mul v p.y Vec3.mul Vec3.add Vec3.add
+}
+
+def proc neg f32 : f32 {
+    0.0 swap -
+}
+
+def proc pos f32 : f32 { }
+
+def proc main : i32 {
+    278.0 pos 278.0 pos 800.0 neg Vec3.new => lookfrom
+    278.0 pos 278.0 pos 000.0 pos Vec3.new => lookat
+    0.0 1.0 0.0 Vec3.new => vup
+    0.0 0.0 0.0 Color.new => background
+
+    0.0 f32' => defocus_angle
+    1.414 f32' => focus_dist
+
+    # image
+    1.0 f32'=> aspect_ratio
+    WIDTH i64' => width
+    
+    width f32' aspect_ratio / i64' => height
+
+    # camera
+    lookfrom => camera_center
+
+    VFOV f32' degrees_to_radians => theta
+    theta 2.0 / tanf => h
+
+    2.0 h focus_dist * * => viewport_height
+    viewport_height width f32' height f32' / * => viewport_width
+
+    lookfrom lookat Vec3.sub Vec3.normal => w 
+    vup w Vec3.cross Vec3.normal => u
+    w u Vec3.cross => v
+
+    # vecs
+    u viewport_width Vec3.mul => viewport_u
+    v 0.0 viewport_height - Vec3.mul => viewport_v
+
+    # pixel
+    viewport_u width f32' Vec3.div => pixel_delta_u
+    viewport_v height f32' Vec3.div => pixel_delta_v
+
+    # upper left
+    camera_center
+    w focus_dist Vec3.mul Vec3.sub
+    viewport_u 2.0 Vec3.div Vec3.sub
+    viewport_v 2.0 Vec3.div Vec3.sub => viewport_upper_left
+
+    focus_dist defocus_angle 2.0 / degrees_to_radians tanf * => defocus_radius
+    u defocus_radius Vec3.mul => defocus_disk_u
+    v defocus_radius Vec3.mul => defocus_disk_v
+
+    focus_dist defocus_angle 2.0 / degrees_to_radians tanf * => defocus_radius
+    u defocus_radius Vec3.mul => defocus_disk_u
+    v defocus_radius Vec3.mul => defocus_disk_v
+
+    # render
+    "P3
+" printstr
+    
+    width printint
+    " " printstr
+    height printint
+    "
+255
+" printstr
+
+
+    # Lambertian [2] .SIZE malloc Lambertian [2] *' => lambertians
+    # Metal [2] .SIZE malloc Metal [2] *' => metals
+    # Dielectric [2] .SIZE malloc Dielectric [2] *' => dielectrics
+    # SolidColor [2] .SIZE malloc SolidColor [2] *' => solidcolors
+    # Checker [1] .SIZE malloc Checker [1] *' => checkers
+    # ImageTexture [1] .SIZE malloc ImageTexture [1] *' => images 
+
+    # DiffuseLight [1] .SIZE malloc DiffuseLight [1] *' => difflights 
+
+    # images [0] "lol.png" Image.load ImageTexture.new =
+
+    # solidcolors [0] 4.0 4.0 4.0 Color.new SolidColor.new = 
+    # solidcolors [1] 0.1 0.2 0.5 Color.new SolidColor.new =   
+
+    # difflights [0] solidcolors [0] Texture.new DiffuseLight.new =
+
+    # checkers [0]
+    # solidcolors [0] Texture.new
+    # solidcolors [1] Texture.new
+    # 3.0 Checker.new =
+
+    # lambertians [0] images [0] Texture.new Lambertian.new =
+    # lambertians [1] images [0] Texture.new Lambertian.new =
+    
+    # metals [0] 0.8 0.8 0.8 Color.new 0.3 Metal.new =
+    # metals [1] 0.99 1.0 0.99 Color.new 0.0 Metal.new =
+
+    # dielectrics [0] 1.25 Dielectric.new =
+    # dielectrics [1] 1.5 Dielectric.new =
+
+    # Material [7] mats
+    # mats [0] lambertians [0] Material.new =
+    # mats [1] lambertians [1] Material.new =
+    # mats [2] metals [0] Material.new =
+    # # mats [3] metals [1] Material.new =
+    # mats [3] difflights [0] Material.new =
+    # mats [4] dielectrics [0] Material.new =
+    # mats [5] dielectrics [1] Material.new =
+    # mats [6] lambertians [1] Material.new =
+
+    Hittable ArrayList worldStuff
+    worldStuff Hittable ArrayList.init =
+
+    worldStuff cornell_box
+
+    # i32 a
+    # i32 b
+
+    # a 0 =
+    # while { a@ 1 < } : {
+    #     b 0 =
+    #     while { b@ 1 < } : {
+    #         # 0.0 5.0 random_double i32' => idx
+    #         1 => idx
+
+    #         # 0.0 0.9 random_double f32' a@ f32' +
+    #         a@ f32'
+    #         0.0
+    #         b@ f32'
+    #         # 0.0 0.9 random_double f32' b@ f32' +
+    #         Vec3.new => center
+
+    #         Sphere.SIZE malloc Sphere*' => sphere
+    #         sphere 2.0
+    #         mats i64' idx i64' Material.SIZE * + Material*' Sphere.new =
+
+    #         worldStuff sphere center Hittable.new Hittable ArrayList.append
+
+    #         b copy@ 1 + =
+    #     }
+    #     a copy@ 1 + =
+    # }
+
+    # Sphere [5] .SIZE malloc Sphere [5] *' => spheres
+    # spheres [0] 1000.0 mats [6] Sphere.new =
+    # spheres [1] 0.5 mats [1] Sphere.new =
+    # spheres [2] 0.5 mats [4] Sphere.new =
+    # spheres [3] 0.0 0.4 f32' - mats [4] Sphere.new =
+    # spheres [4] 0.5 mats [3] Sphere.new =
+    
+    # Quad [5] .SIZE malloc Quad [5] *' => quads
+    # quads [0] 3.0 neg 2.0 neg 5.0 pos Vec3.new
+    #           0.0 pos 0.0 pos 4.0 neg Vec3.new
+    #           0.0 pos 4.0 pos 0.0 pos Vec3.new
+    #           mats [3] Quad.new =
+    # quads [1] 2.0 neg 2.0 neg 0.0 pos Vec3.new
+    #           4.0 pos 0.0 pos 0.0 pos Vec3.new
+    #           0.0 pos 4.0 pos 0.0 pos Vec3.new
+    #           mats [3] Quad.new =
+    # quads [2] 3.0 pos 2.0 neg 1.0 pos Vec3.new
+    #           0.0 pos 0.0 pos 4.0 pos Vec3.new
+    #           0.0 pos 4.0 pos 0.0 pos Vec3.new
+    #           mats [3] Quad.new =
+    # quads [3] 2.0 neg 3.0 pos 1.0 pos Vec3.new
+    #           4.0 pos 0.0 pos 0.0 pos Vec3.new
+    #           0.0 pos 0.0 pos 4.0 pos Vec3.new
+    #           mats [3] Quad.new =
+    # quads [4] 2.0 neg 3.0 neg 5.0 pos Vec3.new
+    #           4.0 pos 0.0 pos 0.0 pos Vec3.new
+    #           0.0 pos 0.0 pos 4.0 neg Vec3.new
+    #           mats [3] Quad.new =
+
+
+    # worldStuff quads [0] 0.0 pos 0.0 pos 0.0 pos Vec3.new Hittable.new Hittable ArrayList.append
+    # worldStuff quads [1] 0.0 pos 0.0 pos 0.0 pos Vec3.new Hittable.new Hittable ArrayList.append
+    # worldStuff quads [2] 0.0 pos 0.0 pos 0.0 pos Vec3.new Hittable.new Hittable ArrayList.append
+    # worldStuff quads [3] 0.0 pos 0.0 pos 0.0 pos Vec3.new Hittable.new Hittable ArrayList.append
+    # worldStuff quads [4] 0.0 pos 0.0 pos 0.0 pos Vec3.new Hittable.new Hittable ArrayList.append
+    # worldStuff spheres [0] 0000.0 pos 1005.0 neg 0001.0 neg Vec3.new Hittable.new Hittable ArrayList.append
+    # worldStuff spheres [1] 0000.0 pos 0001.0 pos 0000.0 pos Vec3.new 0000.0 neg 0000.5 pos 0000.0 pos Vec3.new Hittable.new_moving Hittable ArrayList.append 
+    # worldStuff spheres [2] 0000.0 pos 0000.0 pos 0000.0 pos Vec3.new Hittable.new Hittable ArrayList.append
+    # worldStuff spheres [3] 0001.0 neg 0000.0 pos 0001.0 neg Vec3.new Hittable.new Hittable ArrayList.append
+    # worldStuff spheres [4] 0001.0 neg 0000.0 pos 0001.0 neg Vec3.new Hittable.new Hittable ArrayList.append
+
+    Group world
+    world worldStuff@ Group.newL =
+
+    # BHV world
+    # world worldStuff 0 worldStuff.len@ BHV.new =
+
+    Hittable worldh
+    worldh world 0.0 0.0 0.0 Vec3.new Hittable.new =
+
+    i64 i
+    i64 j
+    i64 s
+    Color c
+    Vec3 ray_origin
+
+    j 0 =
+    while { j@ height < } : {
+        i 0 =
+        while { i@ width < } : {
+            c 0.0 0.0 0.0 Color.new =
+
+            s 0 =
+            while { s@ SAMPLES < } : {
+                viewport_upper_left
+                pixel_delta_u i@ f32' Vec3.mul
+                pixel_delta_v j@ f32' Vec3.mul Vec3.add            
+                Vec3.add => pixel_center 
+
+                pixel_center
+                pixel_delta_u pixel_delta_v pixel_sample_square
+                Vec3.add => pixel_sample
+
+                ray_origin camera_center =
+
+                defocus_angle 0.0 f32' > if {
+                    ray_origin camera_center defocus_disk_u defocus_disk_v defocus_disk_sample =
+                }
+
+                random_double01 f32' => ray_time
+
+                pixel_sample ray_origin@ Vec3.sub => ray_direction
+
+                ray_origin@ ray_direction ray_time Ray.new worldh@ background MAX_DEPTH Ray.color => add_c
+                c.data c.data@ add_c.data Vec3.add =
+
+                s copy@ 1 + =
+            }
+
+            c@ s@ f32' Color.write
+
+            i copy@ 1 + =
+        }
+
+        j@ i32' height i32' log_pc
+
+        j copy@ 1 + =
+    }
+
+    0
+}

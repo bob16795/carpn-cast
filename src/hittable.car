@@ -1,0 +1,75 @@
+import "src/hitrecord.car"
+import "src/aabb.car"
+
+fntype proc CheckHitFn void* HRay Vec3 Interval HitRecord* : bool
+fntype proc BoundingBoxFn void* : AABB
+extern proc sqrtf f32 : f32
+    
+struct HittableVTable {
+    CheckHitFn checkHitFn
+    BoundingBoxFn boundingBoxFn
+}
+
+struct Hittable {
+    Vec3 center
+    Vec3 center_vel
+
+    HittableVTable vtable
+
+    void* self
+    
+    def proc new anytype* Vec3 : Self {
+        Self result
+        
+        swap => targ
+
+        targ@.TYPE => T
+        
+        result.center swap = 
+        result.center_vel 0.0 0.0 0.0 Vec3.new =
+
+        result.vtable.checkHitFn (T.checkHit) =
+        result.vtable.boundingBoxFn (T.boundingBox) =
+        result.self targ void*' =
+
+        result@
+    }
+
+    def proc new_moving anytype* Vec3 Vec3 : Self {
+        Self result
+        
+        result.center swap = 
+        swap => targ
+        result.center_vel swap =
+
+        targ@.TYPE => T
+
+        result.vtable.checkHitFn (T.checkHit) =
+        result.self targ void*' =
+
+        result@
+    }
+
+    def proc checkHit Self Vec3 HRay Interval HitRecord* : bool {
+        => record
+        => interval
+        => ray
+        => offset
+        => self
+
+        offset self.center Vec3.add => center
+        # self.center_vel ray.time Vec3.mul Vec3.add Vec3.add => center
+
+        self.self ray center interval record self.vtable.checkHitFn ()
+    }
+
+    def proc boundingBox Self : AABB {
+        => self
+
+        self.self self.vtable.boundingBoxFn () => base
+
+        base self.center AABB.offset
+        # base self.center self.center_vel Vec3.add AABB.offset
+        # AABB.combine
+    }
+}

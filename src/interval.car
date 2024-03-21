@@ -1,0 +1,91 @@
+extern proc fminf f32 f32 : f32
+extern proc fmaxf f32 f32 : f32
+
+struct Interval {
+    f32 min
+    f32 max
+
+    def proc default : Self {
+        Self result
+
+        result.min 0.0 =
+        result.max 0.0 =
+
+        result@
+    }
+
+    def proc full : Self {
+        Self result
+
+        result.min 0.0 infinity - =
+        result.max 0.0 infinity + =
+
+        result@
+    }
+
+    def proc new f32 f32 : Self {
+        Self result
+
+        result.max swap =
+        result.min swap =
+
+        result@
+    }
+
+    def proc combine Self Self : Self {
+        => b
+        => a
+
+        a.min b.min fminf
+        a.max b.max fmaxf Interval.new
+    }
+    
+    def proc offset Self f32 : Self {
+        => o
+        => self
+
+        self.min o +
+        self.max o +
+        Self.new 
+    }
+
+    def proc contains Self f32 : bool {
+        => x
+        => self
+
+        self.min x > 
+        self.max x < || !
+    }
+
+    def proc surrounds Self f32 : bool {
+        => x
+        => self
+
+        self.min x <
+        self.max x > &&
+    }
+
+    def proc clamp Self f32 : f32 {
+        => x
+        => self
+
+        self.min x > if { self.min ret }
+        self.max x < if { self.max ret }
+
+        x
+    }
+
+    def proc size Self : f32 {
+        copy.max
+        swap.min -
+    }
+
+    def proc expand Self f32 : Self {
+        2.0 / => padding
+        => self
+
+        self.min padding -
+        self.max padding +
+        Interval.new
+    }
+}

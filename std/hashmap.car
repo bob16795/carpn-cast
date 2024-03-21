@@ -1,0 +1,52 @@
+import "std/mem.car"
+    
+const MAP_LEN 256
+
+macro MapNode K V {
+    K key
+    V value
+    void* next
+}
+
+macro HashMap K V {
+    K V MapNode* [256] data
+
+    def proc init : Self {
+        Self result
+
+        i32 i
+        i 0 =
+
+        while { i@ 256 < } : {
+            result.data u64' i@ K V MapNode*.SIZE * u64' + void**' null K V MapNode*' =
+
+            i copy@ 1 +=
+        }
+
+        result@
+    }
+
+    def proc put Self* K V : void {
+        => value
+        => key
+        => self
+
+        key K.hash 256 % => idx
+        
+        # self.data u64' idx void*.SIZE * u64' + void**' null K V MapNode*' =
+    }
+
+    def proc get Self* K : V* {
+        => key
+        => self
+
+        key K.hash 256 % => idx
+
+        self.data u64' idx void*.SIZE * u64' + K V MapNode**'@ => addr
+        addr null void*' == if {
+            null V*' ret
+        }
+
+        addr V*'
+    }
+}
