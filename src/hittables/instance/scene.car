@@ -1,0 +1,104 @@
+const boxes_per_side 20
+
+def proc test_scene Hittable ArrayList* : void {
+    => output
+
+    SolidColor.SIZE malloc SolidColor*' => ground_color
+    ground_color 0.48 0.83 0.53 Color.new SolidColor.new =
+
+    Lambertian.SIZE malloc Lambertian*' => ground
+    ground ground_color Texture.new Lambertian.new =
+
+    Material.SIZE malloc Material*' => ground_mat
+    ground_mat ground Material.new =
+
+    i32 i
+    i32 j
+
+    i 0 =
+    while { i@ boxes_per_side < } : {
+        j 0 =
+        while { j@ boxes_per_side < } : {
+            100.0 f32' => w
+            i@ f32' w * 1000.0 - => x0
+            0.0 f32' => y0
+            j@ f32' w * 1000.0 - => z0
+            
+            x0 w + => x1
+            1.0 101.0 random_double f32' => y1
+            z0 w + => z1
+
+            output
+            x0 y0 z0 Vec3.new
+            x1 y1 z1 Vec3.new
+            ground_mat
+            create_box
+
+            j copy@ 1 +=
+        }
+        i copy@ 1 +=
+    }
+
+    SolidColor.SIZE malloc SolidColor*' => light_color
+    light_color 7.0 7.0 7.0 Color.new SolidColor.new =
+
+    DiffuseLight.SIZE malloc DiffuseLight*' => light
+    light light_color Texture.new DiffuseLight.new =
+    
+    Material.SIZE malloc Material*' => light_mat
+    light_mat light Material.new =
+
+    Quad.SIZE malloc Quad*' => light_quad
+    light_quad
+    123.0 554.0 147.0 Vec3.new
+    300.0 0.0 0.0 Vec3.new
+    0.0 0.0 265.0 Vec3.new
+    light_mat
+    Quad.new =
+
+    output
+    light_quad 0.0 0.0 0.0 Vec3.new Hittable.new
+    Hittable ArrayList.append
+
+    SolidColor.SIZE malloc SolidColor*' => sphere1_color
+    sphere1_color 0.7 0.3 0.1 Color.new SolidColor.new =
+
+    Lambertian.SIZE malloc Lambertian*' => sphere1
+    sphere1 sphere1_color Texture.new Lambertian.new =
+
+    Material.SIZE malloc Material*' => sphere1_mat
+    sphere1_mat sphere1 Material.new =
+
+    Sphere.SIZE malloc Sphere*' => sphere1_obj
+    sphere1_obj 30.0 sphere1_mat Sphere.new =
+
+    output
+    sphere1_obj 400.0 400.0 200.0 Vec3.new Hittable.new
+    Hittable ArrayList.append
+
+    Dielectric.SIZE malloc Dielectric*' => sphere2
+    sphere2 1.5 Dielectric.new =
+    
+    Material.SIZE malloc Material*' => sphere2_mat
+    sphere2_mat sphere2 Material.new =
+    
+    Sphere.SIZE malloc Sphere*' => sphere2_obj
+    sphere2_obj 50.0 sphere2_mat Sphere.new =
+
+    output
+    sphere2_obj 260.0 150.0 45.0 Vec3.new Hittable.new
+    Hittable ArrayList.append
+    
+    Metal.SIZE malloc Metal*' => sphere3
+    sphere3 0.8 0.8 0.9 Color.new 1.0 Metal.new =
+
+    Material.SIZE malloc Material*' => sphere3_mat
+    sphere3_mat sphere3 Material.new =
+    
+    Sphere.SIZE malloc Sphere*' => sphere3_obj
+    sphere3_obj 50.0 sphere3_mat Sphere.new =
+
+    output
+    sphere3_obj 0.0 150.0 145.0 Vec3.new Hittable.new
+    Hittable ArrayList.append
+}

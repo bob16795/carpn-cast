@@ -27,11 +27,6 @@ struct Quad {
         
         result.normal n Vec3.normal =
 
-        result.d
-        result.normal@
-        result.q@
-        Vec3.dot =
-
         result.w
         n n n Vec3.dot Vec3.div =
 
@@ -78,9 +73,15 @@ struct Quad {
 
         self.normal@ ray.dir Vec3.dot => denom
 
-        denom fabsf 0.0001 < if {
+        denom fabsf 0.000001 < if {
             false ret
         }
+
+        self.d
+        self.normal@
+        self.q@
+        center Vec3.add
+        Vec3.dot =
 
         self.d@ self.normal@ ray.orig Vec3.dot - denom / => t
         time t Interval.contains ! if {
@@ -88,7 +89,7 @@ struct Quad {
         }
 
         ray.orig ray.dir t Vec3.mul Vec3.add => inter
-        inter self.q@ Vec3.sub => planar_hitpt_vector
+        inter self.q@ center Vec3.add Vec3.sub => planar_hitpt_vector
         self.w@ planar_hitpt_vector self.v@ Vec3.cross Vec3.dot => alpha
         self.w@ self.u@ planar_hitpt_vector Vec3.cross Vec3.dot => beta
 

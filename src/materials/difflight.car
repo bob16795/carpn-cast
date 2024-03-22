@@ -14,8 +14,8 @@ struct DiffuseLight {
     def proc emit Self* f32 f32 Vec3 : Color {
         Vec3 p
 
-        p swap =
-        copy => v disc
+        copy p swap = disc
+        => v 
         => u
         => self
 

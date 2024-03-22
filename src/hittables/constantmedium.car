@@ -1,0 +1,76 @@
+import "src/hitrecord.car"
+import "src/vec3.car"
+
+extern proc logf f32 : f32
+
+struct ConstantMedium {
+    Hittable boundary
+    f32 neg_inv_density
+    Material* phase_mat
+
+    def proc new Hittable f32 Material* : Self {
+        Self result
+
+        => mat
+        => density
+        result.boundary swap =
+
+        result.neg_inv_density 0.0 1.0 f32' - density / =
+
+        result@
+    }
+
+    def proc checkHit Self* HRay Vec3 Interval HitRecord* : bool {
+        => record
+        => time
+        => center
+        => ray
+        => self
+
+        HitRecord rec1
+        HitRecord rec2
+        
+        self.boundary@ center ray Interval.full rec1 Hittable.checkHit ! if {
+            false ret
+        }
+        
+        self.boundary@ center ray rec1.t@ 0.001 + infinity Interval.new rec2 Hittable.checkHit ! if {
+            false ret
+        }
+
+        rec1.t@ time.min < if {
+            rec1.t time.min =
+        }
+        rec2.t@ time.max < if {
+            rec2.t time.max =
+        }
+
+        rec1.t@ rec2.t@ < ! if {
+            false ret
+        }
+
+        rec1.t@ 0.0 < if {
+            rec1.t 0.0 =
+        }
+
+        ray.dir Vec3.mag => ray_length
+        rec2.t@ rec1.t@ - ray_length * => distance_inside_boundary
+        self.neg_inv_density@ random_double01 f32' logf * => hit_distance
+
+        hit_distance distance_inside_boundary > if {
+            false ret
+        }
+
+        record.t rec1.t@ hit_distance + ray_length / =
+        record.p ray.orig ray.dir record.t@ Vec3.mul Vec3.add =
+        record.normal 1.0 0.0 0.0 Vec3.new =
+        record.front true =
+        record.mat self.phase_mat@ =
+
+        true
+    }
+
+    def proc boundingBox Self* : AABB {
+        .boundary@ Hittable.boundingBox
+    }
+}

@@ -1,7 +1,8 @@
-def proc create_box Vec3 Vec3 Material* : Hittable {
+def proc create_box Hittable ArrayList* Vec3 Vec3 Material* : void {
     => mat
     => b
     => a
+    => output
 
     Group.SIZE malloc Group*' => sides
     sides Group.new =
@@ -38,17 +39,15 @@ def proc create_box Vec3 Vec3 Material* : Hittable {
         min.x max.y max.z Vec3.new
         dx dz Vec3.neg mat
     Quad.new =
-    quads [4]
+    quads [5]
         min.x min.y min.z Vec3.new
         dx dz mat
     Quad.new =
 
-    sides quads [0] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
-    sides quads [1] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
-    sides quads [2] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
-    sides quads [3] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
-    sides quads [4] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
-    sides quads [5] 0.0 0.0 0.0 Vec3.new Hittable.new Group.add
-
-    sides 0.0 0.0 0.0 Vec3.new Hittable.new
+    output quads [0] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
+    output quads [1] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
+    output quads [2] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
+    output quads [3] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
+    output quads [4] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
+    output quads [5] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
 }

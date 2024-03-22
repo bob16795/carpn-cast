@@ -45,6 +45,7 @@ struct Hittable {
         targ@.TYPE => T
 
         result.vtable.checkHitFn (T.checkHit) =
+        result.vtable.boundingBoxFn (T.boundingBox) =
         result.self targ void*' =
 
         result@

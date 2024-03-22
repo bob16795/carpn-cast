@@ -8,7 +8,7 @@ def proc cornell_box Hittable ArrayList* : void {
     colors [0] 0.65 0.05 0.05 Color.new SolidColor.new =
     colors [1] 0.73 0.73 0.73 Color.new SolidColor.new =
     colors [2] 0.12 0.45 0.15 Color.new SolidColor.new =
-    colors [3] 15.0 15.0 15.0 Color.new SolidColor.new =
+    colors [3] 7.0 7.0 7.0 Color.new SolidColor.new =
 
     Lambertian.SIZE malloc Lambertian*' => red 
     Lambertian.SIZE malloc Lambertian*' => white
@@ -40,9 +40,9 @@ def proc cornell_box Hittable ArrayList* : void {
         mats [1]
     Quad.new =
     quads [2]
-        343.0 554.0 332.0 Vec3.new
-        0.0 130.0 f32'- 000.0 000.0 Vec3.new
-        000.0 000.0 0.0 105.0 f32'- Vec3.new
+        113.0 554.0 127.0 Vec3.new
+        330.0 000.0 000.0 Vec3.new
+        000.0 000.0 305.0 Vec3.new
         mats [3]
     Quad.new =
     quads [3]
@@ -70,23 +70,34 @@ def proc cornell_box Hittable ArrayList* : void {
     output quads [3] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
     output quads [4] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
     output quads [5] 0.0 0.0 0.0 Vec3.new Hittable.new Hittable ArrayList.append
-    
-    RotateY [2] .SIZE malloc RotateY [2] *' => rot
 
-    rot [0] 
-        000.0 000.0 000.0 Vec3.new
-        165.0 330.0 165.0 Vec3.new
-        mats [2]
-        create_box
-        15.0 0.0174533 f32' *
-    RotateY.new =
-    rot [1]
-        000.0 000.0 000.0 Vec3.new
-        165.0 165.0 165.0 Vec3.new
-        mats [2]
-        create_box
-        0.0 18.0 f32' - 0.0174533 f32' *
-    RotateY.new =
+    output
+    130.0 0.0 65.0 Vec3.new
+    295.0 165.0 230.0 Vec3.new
+    mats [2]
+    create_box
+
+    output
+    265.0 0.0 295.0 Vec3.new
+    430.0 330.0 460.0 Vec3.new
+    mats [2]
+    create_box
+
+    # RotateY [2] .SIZE malloc RotateY [2] *' => rot
+    # rot [0] 
+    #     000.0 000.0 000.0 Vec3.new
+    #     165.0 330.0 165.0 Vec3.new
+    #     mats [2]
+    #     create_box
+    #     15.0 0.0174533 f32' *
+    # RotateY.new =
+    # rot [1]
+    #     000.0 000.0 000.0 Vec3.new
+    #     165.0 165.0 165.0 Vec3.new
+    #     mats [2]
+    #     create_box
+    #     0.0 18.0 f32' - 0.0174533 f32' *
+    # RotateY.new =
 
     # output
     # rot [0] 265.0 000.0 295.0 Vec3.new Hittable.new

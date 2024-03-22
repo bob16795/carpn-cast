@@ -3,8 +3,9 @@ import "src/hitrecord.car"
 
 extern proc fminf f32 f32 : f32
 extern proc fmaxf f32 f32 : f32
+extern proc log_pc i32 i32 : void
 
-const delta 0.0001
+const delta 0.01
 
 struct AABB {
     Interval x
@@ -32,14 +33,14 @@ struct AABB {
     }
 
     def proc newV Vec3 Vec3 : Self {
-        => max
-        => min
+        => a
+        => b
 
         Self result
 
-        result.x min.x max.x Interval.new =
-        result.y min.y max.y Interval.new =
-        result.z min.z max.z Interval.new =
+        result.x a.x b.x fminf a.x b.x fmaxf Interval.new =
+        result.y a.y b.y fminf a.y b.y fmaxf Interval.new =
+        result.z a.z b.z fminf a.z b.z fmaxf Interval.new =
 
         result@
     }
@@ -80,23 +81,22 @@ struct AABB {
     }
 
     def proc hit Self HRay Interval : bool {
-        # TODO: redo
-
-        Interval time
-
-        copy time swap = disc
+        => t
         => ray
         => self
 
+        Interval time
+        time t =
+
+        f32 t0
+        f32 t1
         i32 i
+
         i 0 =
 
         while { i@ 3 < } : {
             1.0 ray.dir i@ Vec3.axis / => invD
             ray.orig i@ Vec3.axis => orig 
-
-            f32 t0
-            f32 t1
 
             t0 self i@ Self.axis .min orig - invD * =
             t1 self i@ Self.axis .max orig - invD * =
@@ -107,15 +107,10 @@ struct AABB {
                 t1 tmp =
             } 
 
-            t0@ time.min@ > if {
-                time.min t0@ =
-            }
-            
-            t1@ time.max@ < if {
-                time.max t1@ =
-            }
+            time.min t0@ time.min@ fmaxf =
+            time.max t1@ time.max@ fminf =
 
-            time.max@ time.min@ > ! if {
+            time.max@ time.min@ < if {
                 false ret
             }
 

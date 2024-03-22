@@ -1,8 +1,3 @@
-import "src/materials/lambertian.car"
-import "src/materials/metal.car"
-import "src/materials/dielectric.car"
-import "src/materials/difflight.car"
-
 fntype proc EmitFn void* f32 f32 Vec3 : Color
 fntype proc ScatterFn void* HRay HitRecord* Color* HRay* : bool
 extern proc sqrtf f32 : f32

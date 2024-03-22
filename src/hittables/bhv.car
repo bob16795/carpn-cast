@@ -24,7 +24,7 @@ def proc partition Hittable ArrayList* i32 i32 i32 : i32 {
     i32 j
     j start =
 
-    while { j@ end 1 - > ! } : {
+    while { j@ end < } : {
         objects j@ Hittable ArrayList.get
         Hittable.boundingBox axis AABB.axis.min piviot < if {
             i copy@ 1 += 
@@ -73,13 +73,8 @@ struct BHV {
             # pi i64' printint
 
             objects start pi 1 - axis Self.qsort
-            # result objects pi Hittable ArrayList.get Hittable ArrayList.append
             objects pi 1 + end axis Self.qsort
-        } 
-
-        # start end == if {    
-        #     result objects start Hittable ArrayList.get Hittable ArrayList.append
-        # }
+        }
     }
 
     Hittable left
@@ -94,7 +89,8 @@ struct BHV {
 
         Self result
     
-        0 2 random_int => axis
+        # 0 2 random_int => axis
+        0 i32' => axis
 
         end start - => object_span
 
@@ -135,18 +131,18 @@ struct BHV {
     }
 
     def proc checkHit Self* HRay Vec3 Interval HitRecord* : bool {
-        Interval time
-
         => record
-        copy time swap = disc
+        => t
         => center
         => ray
         @=> self
 
-        self.box ray time@ AABB.hit ! if {
-            # "escaped" log_info
+        self.box ray t AABB.hit ! if {
             false ret
         }
+
+        Interval time
+        time t =
 
         self.left center ray time@ record Hittable.checkHit => hit_left
 

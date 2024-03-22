@@ -1,0 +1,35 @@
+import "src/hitrecord.car"
+import "src/material.car"
+
+struct Isotropic {
+    Texture albedo
+
+    def proc new Texture : Self {
+        Self result
+
+        result.albedo swap =
+
+        result@
+    }
+
+    def proc emit Self* f32 f32 Vec3 : Color {
+        disc disc disc disc
+        0.0 0.0 0.0 Color.new
+    }
+    
+    def proc scatter Self* HRay HitRecord* Color* HRay* : bool {
+        => scattered
+        => attenuation 
+        => record
+        => in
+        => self
+
+        scattered.orig record.p@ =
+        scattered.dir Vec3.random_unit_vector =
+        scattered.time in.time = 
+
+        attenuation self.albedo@ record.u@ record.v@ record.p Texture.value =
+
+        true
+    }
+}

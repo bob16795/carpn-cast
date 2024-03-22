@@ -8,20 +8,35 @@ import "src/hittables/sphere.car"
 import "src/hittables/group.car"
 import "src/hittables/quad.car"
 import "src/hittables/bhv.car"
+import "src/hittables/constantmedium.car"
+
 import "src/textures/solidcolor.car"
 import "src/textures/checker.car"
 import "src/textures/image.car"
-import "src/hittables/instance/cornell.car"
 
-const WIDTH 1000 
+import "src/materials/metal.car"
+import "src/materials/dielectric.car"
+import "src/materials/difflight.car"
+import "src/materials/isotropic.car"
+import "src/materials/lambertian.car"
+
+import "src/hittables/instance/cornell.car"
+import "src/hittables/instance/scene.car"
+
+const WIDTH 640
+const HEIGHT 480
 const SAMPLES 1000
-const MAX_DEPTH 50
+const MAX_DEPTH 100
 const VFOV 40.0
+const THREADS 7
 
 extern proc random_double01 : f64
 extern proc random_double : f64
 extern proc tanf f32 : f32
 extern proc log_pc i32 i32 : void
+extern proc get_name i32 : u8$*
+
+global lock void*
 
 def proc degrees_to_radians f32 : f32 {
     0.01745 *
@@ -54,6 +69,77 @@ def proc neg f32 : f32 {
 
 def proc pos f32 : f32 { }
 
+struct ThreadArgs {
+    i32 width
+    i32 height
+    Color* out
+    Vec3 viewport_upper_left
+    Vec3 pixel_delta_u
+    Vec3 pixel_delta_v
+    Vec3 camera_center
+    Hittable world
+    Color background
+}
+
+extern proc pthread_create void** void* void* void* : void
+extern proc pthread_join void* void* : void
+extern proc pthread_mutex_init void** void* : void
+extern proc pthread_mutex_lock void* : void
+extern proc pthread_mutex_unlock void* : void
+extern proc stbi_write_png u8$* i32 i32 i32 u8* i32 : void
+
+def proc thread ThreadArgs* : void* {
+    => args
+
+    i32 i
+    i32 j
+    Vec3 ray_origin
+
+    j 0 =
+    while { j@ args.height@ < } : {
+        i 0 =
+        while { i@ args.width@ < } : {
+            args.out@ i64'
+            j@ i64' args.width@ i64' *
+            i@ i64' + Color.SIZE i64' *
+            + Color*' => c
+
+            args.viewport_upper_left@
+            args.pixel_delta_u@ i@ f32' Vec3.mul
+            args.pixel_delta_v@ j@ f32' Vec3.mul Vec3.add            
+            Vec3.add => pixel_center 
+
+            pixel_center
+            args.pixel_delta_u@ args.pixel_delta_v@ pixel_sample_square
+            Vec3.add => pixel_sample
+
+            ray_origin args.camera_center@ =
+
+            # defocus_angle@ 0.0 f32' > if {
+            #     ray_origin camera_center defocus_disk_u defocus_disk_v defocus_disk_sample =
+            # }
+
+            random_double01 f32' => ray_time
+
+            pixel_sample ray_origin@ Vec3.sub => ray_direction
+
+            ray_origin@ ray_direction ray_time Ray.new args.world@ args.background@ MAX_DEPTH Ray.color => add_c
+
+            lock pthread_mutex_lock
+            
+            c.data c.data@ add_c.data Vec3.add =
+
+            lock pthread_mutex_unlock
+
+            i copy@ 1 +=
+        }
+
+        j copy@ 1 +=
+    }
+
+    null
+}
+
 def proc main : i32 {
     278.0 pos 278.0 pos 800.0 neg Vec3.new => lookfrom
     278.0 pos 278.0 pos 000.0 pos Vec3.new => lookat
@@ -67,7 +153,8 @@ def proc main : i32 {
     1.0 f32'=> aspect_ratio
     WIDTH i64' => width
     
-    width f32' aspect_ratio / i64' => height
+    HEIGHT i64' => height
+    # width f32' aspect_ratio / i64' => height
 
     # camera
     lookfrom => camera_center
@@ -105,30 +192,33 @@ def proc main : i32 {
     v defocus_radius Vec3.mul => defocus_disk_v
 
     # render
-    "P3
-" printstr
+#     "P3
+# " printstr
     
-    width printint
-    " " printstr
-    height printint
-    "
-255
-" printstr
+#     width printint
+#     " " printstr
+#     height printint
+#     "
+# 255
+# " printstr
 
 
     # Lambertian [2] .SIZE malloc Lambertian [2] *' => lambertians
     # Metal [2] .SIZE malloc Metal [2] *' => metals
     # Dielectric [2] .SIZE malloc Dielectric [2] *' => dielectrics
-    # SolidColor [2] .SIZE malloc SolidColor [2] *' => solidcolors
+    SolidColor [2] .SIZE malloc SolidColor [2] *' => solidcolors
     # Checker [1] .SIZE malloc Checker [1] *' => checkers
     # ImageTexture [1] .SIZE malloc ImageTexture [1] *' => images 
+    Isotropic [1] .SIZE malloc Isotropic [1] *' => isos 
 
     # DiffuseLight [1] .SIZE malloc DiffuseLight [1] *' => difflights 
 
     # images [0] "lol.png" Image.load ImageTexture.new =
 
-    # solidcolors [0] 4.0 4.0 4.0 Color.new SolidColor.new = 
+    solidcolors [0] 0.0 0.0 0.0 Color.new SolidColor.new = 
     # solidcolors [1] 0.1 0.2 0.5 Color.new SolidColor.new =   
+    
+    isos [0] solidcolors [0] Texture.new Isotropic.new =
 
     # difflights [0] solidcolors [0] Texture.new DiffuseLight.new =
 
@@ -146,8 +236,8 @@ def proc main : i32 {
     # dielectrics [0] 1.25 Dielectric.new =
     # dielectrics [1] 1.5 Dielectric.new =
 
-    # Material [7] mats
-    # mats [0] lambertians [0] Material.new =
+    Material [7] .SIZE malloc Material [7] *' => mats
+    mats [0] isos [0] Material.new =
     # mats [1] lambertians [1] Material.new =
     # mats [2] metals [0] Material.new =
     # # mats [3] metals [1] Material.new =
@@ -160,6 +250,7 @@ def proc main : i32 {
     worldStuff Hittable ArrayList.init =
 
     worldStuff cornell_box
+    # worldStuff test_scene
 
     # i32 a
     # i32 b
@@ -194,7 +285,15 @@ def proc main : i32 {
     # spheres [1] 0.5 mats [1] Sphere.new =
     # spheres [2] 0.5 mats [4] Sphere.new =
     # spheres [3] 0.0 0.4 f32' - mats [4] Sphere.new =
-    # spheres [4] 0.5 mats [3] Sphere.new =
+    # spheres [4] 100.0 mats [0] Sphere.new =
+    
+    # ConstantMedium [1] .SIZE malloc ConstantMedium [1] *' => constmediums 
+
+    # constmediums [0]
+    #     spheres [4] 0.0 0.0 0.0 Vec3.new Hittable.new
+    #     0.001
+    #     mats [0]
+    # ConstantMedium.new =
     
     # Quad [5] .SIZE malloc Quad [5] *' => quads
     # quads [0] 3.0 neg 2.0 neg 5.0 pos Vec3.new
@@ -218,7 +317,6 @@ def proc main : i32 {
     #           0.0 pos 0.0 pos 4.0 neg Vec3.new
     #           mats [3] Quad.new =
 
-
     # worldStuff quads [0] 0.0 pos 0.0 pos 0.0 pos Vec3.new Hittable.new Hittable ArrayList.append
     # worldStuff quads [1] 0.0 pos 0.0 pos 0.0 pos Vec3.new Hittable.new Hittable ArrayList.append
     # worldStuff quads [2] 0.0 pos 0.0 pos 0.0 pos Vec3.new Hittable.new Hittable ArrayList.append
@@ -228,65 +326,136 @@ def proc main : i32 {
     # worldStuff spheres [1] 0000.0 pos 0001.0 pos 0000.0 pos Vec3.new 0000.0 neg 0000.5 pos 0000.0 pos Vec3.new Hittable.new_moving Hittable ArrayList.append 
     # worldStuff spheres [2] 0000.0 pos 0000.0 pos 0000.0 pos Vec3.new Hittable.new Hittable ArrayList.append
     # worldStuff spheres [3] 0001.0 neg 0000.0 pos 0001.0 neg Vec3.new Hittable.new Hittable ArrayList.append
-    # worldStuff spheres [4] 0001.0 neg 0000.0 pos 0001.0 neg Vec3.new Hittable.new Hittable ArrayList.append
+    # worldStuff spheres [4] 225.0 pos 100.0 pos 225.0 pos Vec3.new Hittable.new Hittable ArrayList.append
+    # worldStuff constmediums [0] 225.0 pos 100.0 pos 225.0 pos Vec3.new Hittable.new Hittable ArrayList.append
 
-    Group world
-    world worldStuff@ Group.newL =
+    # Group world
+    # world worldStuff@ Group.newL =
 
-    # BHV world
-    # world worldStuff 0 worldStuff.len@ BHV.new =
+    BHV world
+    world worldStuff 0 worldStuff.len@ BHV.new =
 
     Hittable worldh
     worldh world 0.0 0.0 0.0 Vec3.new Hittable.new =
 
-    i64 i
-    i64 j
     i64 s
-    Color c
-    Vec3 ray_origin
+    i64 t
 
-    j 0 =
-    while { j@ height < } : {
-        i 0 =
-        while { i@ width < } : {
-            c 0.0 0.0 0.0 Color.new =
+    Color* out
+    out Color.SIZE i32' width height * i32' calloc Color*' =
 
-            s 0 =
-            while { s@ SAMPLES < } : {
-                viewport_upper_left
-                pixel_delta_u i@ f32' Vec3.mul
-                pixel_delta_v j@ f32' Vec3.mul Vec3.add            
-                Vec3.add => pixel_center 
+    u8* tmp_out       
+    tmp_out u8 [3] .SIZE i32' width height * i32' calloc u8*' =
 
-                pixel_center
-                pixel_delta_u pixel_delta_v pixel_sample_square
-                Vec3.add => pixel_sample
+    ThreadArgs args
+    args.width width i32' =
+    args.height height i32' =
+    args.out out@ =
+    args.viewport_upper_left viewport_upper_left =
+    args.pixel_delta_u pixel_delta_u =
+    args.pixel_delta_v pixel_delta_v =
+    args.camera_center camera_center =
+    args.world worldh@ =
+    args.background background =
 
-                ray_origin camera_center =
+    void*.SIZE THREADS * malloc void**' => threads
 
-                defocus_angle 0.0 f32' > if {
-                    ray_origin camera_center defocus_disk_u defocus_disk_v defocus_disk_sample =
-                }
+    lock null void*' pthread_mutex_init
+    
+    i32 idx
 
-                random_double01 f32' => ray_time
+    s 0 =
+    t 0 =
+    while { s@ SAMPLES < } : {
+        threads i64' void*.SIZE t@ * + void**'
+        null void*'
+        (thread) void*'
+        args void*'
+        pthread_create
 
-                pixel_sample ray_origin@ Vec3.sub => ray_direction
+        s copy@ 1 +=
+        t copy@ 1 +=
 
-                ray_origin@ ray_direction ray_time Ray.new worldh@ background MAX_DEPTH Ray.color => add_c
-                c.data c.data@ add_c.data Vec3.add =
+        s@ i32' SAMPLES log_pc
 
-                s copy@ 1 + =
+        t@ THREADS > if {
+            while { t@ 0 > } : {
+                t copy@ 1 - =
+
+                threads i64' void*.SIZE t@ * + void**' @
+                null void*'
+                pthread_join
             }
 
-            c@ s@ f32' Color.write
+            idx 0 =
+            while { idx@ height width * < } : {
+                out@ i64' Color.SIZE i64' idx@ i64' * + Color*' => c 
+                
+                tmp_out@ i64' u8 [3] .SIZE i64' idx@ i64' * + u8 [3] *' 
+                c@ s@ f32' Color.bytes =
 
-            i copy@ 1 + =
+                idx copy@ 1 +=
+            }
+
+            s@ i32' get_name width i32' height i32' 3 i32' tmp_out@ width 3 * i32' stbi_write_png
         }
-
-        j@ i32' height i32' log_pc
-
-        j copy@ 1 + =
     }
+
+    while { t@ 0 > } : {
+        t copy@ 1 - =
+
+        threads i64' void*.SIZE t@ * + void**' @
+        null void*'
+        pthread_join
+    }
+
+    idx 0 =
+
+    while { idx@ height width * < } : {
+        out@ i64' Color.SIZE i64' idx@ i64' * + Color*' => c 
+        c@ s@ f32' Color.write
+
+        idx copy@ 1 +=
+    }
+
+    # j 0 =
+    # while { j@ height < } : {
+    #     i 0 =
+    #     while { i@ width < } : {
+    #         c 0.0 0.0 0.0 Color.new =
+
+    #             viewport_upper_left
+    #             pixel_delta_u i@ f32' Vec3.mul
+    #             pixel_delta_v j@ f32' Vec3.mul Vec3.add            
+    #             Vec3.add => pixel_center 
+
+    #             pixel_center
+    #             pixel_delta_u pixel_delta_v pixel_sample_square
+    #             Vec3.add => pixel_sample
+
+    #             ray_origin camera_center =
+
+    #             defocus_angle 0.0 f32' > if {
+    #                 ray_origin camera_center defocus_disk_u defocus_disk_v defocus_disk_sample =
+    #             }
+
+    #             random_double01 f32' => ray_time
+
+    #             pixel_sample ray_origin@ Vec3.sub => ray_direction
+
+    #             ray_origin@ ray_direction ray_time Ray.new worldh@ background MAX_DEPTH Ray.color => add_c
+    #             c.data c.data@ add_c.data Vec3.add =
+
+    #             s copy@ 1 + =
+    #         }
+
+    #         i copy@ 1 + =
+    #     }
+
+    #     j@ i32' height i32' log_pc
+
+    #     j copy@ 1 + =
+    # }
 
     0
 }

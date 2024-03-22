@@ -17,8 +17,8 @@ struct Interval {
     def proc full : Self {
         Self result
 
-        result.min 0.0 infinity - =
-        result.max 0.0 infinity + =
+        result.min 0.0 infinity f32' - =
+        result.max 0.0 infinity f32' + =
 
         result@
     }

@@ -97,7 +97,7 @@ struct RotateY {
         rotated.dir dir@ =
         rotated.time ray.time =
 
-        self.object@ 0.0 0.0 0.0 Vec3.new rotated@ time record Hittable.checkHit ! if {
+        self.object@ center rotated@ time record Hittable.checkHit ! if {
             false ret
         }
 
